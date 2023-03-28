@@ -33,10 +33,10 @@ interface Props {
   drawer: boolean;
 }
 
+const { drawer } = defineProps<Props>();
+
 function close(data: boolean) {
   console.log(data);
   emit('input', false);
 }
-
-const { drawer } = defineProps<Props>();
 </script>

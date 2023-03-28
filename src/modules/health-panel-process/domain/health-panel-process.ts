@@ -7,8 +7,10 @@ export class HealthPanelProcess {
 
   constructor(title: string, columns: HealthPanelColumns[] = []) {
     this.title = title;
-    this.columns = columns.map(
-      (it: any) => new HealthPanelColumns(it.title, it.questions),
-    );
+    this.columns = columns
+      .map((it: any) => new HealthPanelColumns(it.title, it.questions))
+      .sort((a: HealthPanelColumns, b: HealthPanelColumns) => {
+        return Number(a.title) > Number(b.title) ? 1 : -1;
+      });
   }
 }

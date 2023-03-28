@@ -1,16 +1,17 @@
 <template>
   <div class="health-panel-process">
     <!-- <sidebar-component :drawer="drawer" @input="drawer = !drawer" /> -->
-    <v-toolbar>
-      <v-app-bar-nav-icon
+    <v-toolbar color="#000" elevation="2" class="health-panel-process__header">
+      <!-- <v-app-bar-nav-icon
         variant="text"
         @click.stop="drawer = !drawer"
-      ></v-app-bar-nav-icon>
+      ></v-app-bar-nav-icon> -->
 
-      <v-toolbar-title>Painel de saúde 2.0 {{ drawer }}</v-toolbar-title>
+      <v-toolbar-title>Painel de saúde 2.0 </v-toolbar-title>
       <v-row justify="end" align="center">
         <v-col cols="6">
           <v-select
+            disabled
             hide-details
             v-model="currentMonth"
             density="compact"
@@ -40,6 +41,9 @@
         :column="item"
       />
     </section>
+    <v-card>
+      <v-btn @click="sendForm">Enviar form</v-btn>
+    </v-card>
   </div>
 </template>
 
@@ -50,6 +54,8 @@ import { HealthPanel } from './domain/health-panel';
 import { GetQuestionsService } from './services/get-questions.service';
 import HealthPanelColumnsComponent from './components/health-panel-columns.component.vue';
 import SidebarComponent from '../../components/sidebar/sidebar.component.vue';
+import { SaveFormService } from './services/save-form.service';
+
 export default {
   components: {
     HealthPanelColumnsComponent,
@@ -80,13 +86,21 @@ export default {
     getQuestions() {
       const httpService = inject(HTTP_CLIENT) as HttpClient;
       const getQuestionService = new GetQuestionsService(httpService);
+      console.log(getQuestionService);
       getQuestionService.execute().then((response) => {
         this.healthPanelProcess = new HealthPanel(response);
       });
     },
+    sendForm() {
+      const httpService = inject(HTTP_CLIENT) as HttpClient;
+      const saveForm = new SaveFormService(httpService);
+      saveForm.execute(this.healthPanelProcess).then((response) => {
+        console.log(response);
+      });
+    },
   },
 
-  created() {
+  mounted() {
     this.getQuestions();
   },
 };
@@ -102,19 +116,9 @@ export default {
     padding: 30px 0px
     border-bottom: 1px solid #fff
   &__header
-    width: 100%
-    text-align: center
-    padding: 10px
     position: sticky
-    height: 80px
     top: 0
-    display: flex
-    background: var(--backgroud-color)
-    transition: 0.2s
-    z-index: 1
-    border-bottom: 1px solid #babaca
-    justify-content: space-between
-
+    z-index: 10
   &__theme-title
     font-size: 28px
     font-weight: 700

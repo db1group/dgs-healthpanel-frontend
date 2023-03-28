@@ -10,9 +10,9 @@ export class DependencyInjection {
   constructor(private readonly applicationVue: App<Element>) {}
 
   execute() {
-    const httpService: HttpClient = new AxiosAdapter();
     const store: AuthStore = authStore();
     const authService: AuthAd = new MicrosoftAdService(store);
+    const httpService: HttpClient = new AxiosAdapter(store);
 
     this.applicationVue.provide(HTTP_CLIENT, httpService);
     this.applicationVue.provide(AUTH_AD, authService);

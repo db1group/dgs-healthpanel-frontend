@@ -6,7 +6,7 @@ import 'vuetify/styles';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
-
+import { healthPanelThemeDark } from './theme/vuetify.dark-theme';
 import App from './App.vue';
 import { DependencyInjection } from './infra/dependecy-injection/dependency-injection';
 
@@ -22,7 +22,10 @@ const vuetify = createVuetify({
     },
   },
   theme: {
-    defaultTheme: 'dark',
+    defaultTheme: 'healthPanelThemeDark',
+    themes: {
+      healthPanelThemeDark,
+    },
   },
 });
 
