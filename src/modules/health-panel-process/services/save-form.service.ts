@@ -5,6 +5,7 @@ export class SaveFormService {
   constructor(private readonly http: HttpClient) {}
 
   async execute(form: HealthPanel): Promise<any> {
-    return this.http.post('/form', form).then(({ data }) => data);
+    const payload = form.format();
+    return this.http.put('/answer', payload).then(({ data }) => data);
   }
 }

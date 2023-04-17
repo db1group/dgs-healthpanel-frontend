@@ -1,37 +1,8 @@
 <template>
   <div class="health-panel-process">
-    <!-- <sidebar-component :drawer="drawer" @input="drawer = !drawer" /> -->
-    <v-toolbar color="#000" elevation="2" class="health-panel-process__header">
-      <!-- <v-app-bar-nav-icon
-        variant="text"
-        @click.stop="drawer = !drawer"
-      ></v-app-bar-nav-icon> -->
+    <apresentation-dialog @input="setProject" :value="showDialog" />
 
-      <v-toolbar-title>Painel de saúde 2.0 </v-toolbar-title>
-      <v-row justify="end" align="center">
-        <v-col cols="6">
-          <v-select
-            disabled
-            hide-details
-            v-model="currentMonth"
-            density="compact"
-            max-width="200px"
-            placeholder="Mês de competência"
-            label="Mês de competência"
-            :items="months"
-            item-title="text"
-            background-color="transparent"
-            variant="outlined"
-            ro
-            item-value="value"
-          />
-        </v-col>
-      </v-row>
-    </v-toolbar>
-    <section
-      class="health-panel-process__theme"
-      v-for="theme in healthPanelProcess.process"
-    >
+    <section class="health-panel-process__theme" v-for="theme in healthProcess">
       <header class="health-panel-process__theme-title">
         {{ theme.title }}
       </header>
@@ -41,67 +12,83 @@
         :column="item"
       />
     </section>
-    <v-card>
-      <v-btn @click="sendForm">Enviar form</v-btn>
+    <v-card v-if="healthProcess.length">
+      <v-card-actions class="my-5">
+        <v-row justify="center">
+          <v-col cols="12" lg="4">
+            <v-btn
+              block
+              size="large"
+              variant="outlined"
+              color="primary"
+              @click="sendForm()"
+              >Enviar form</v-btn
+            >
+          </v-col>
+        </v-row>
+      </v-card-actions>
     </v-card>
   </div>
 </template>
 
 <script lang="ts">
-import { reactive, inject, onMounted } from 'vue';
+import { inject } from 'vue';
 import { HttpClient, HTTP_CLIENT } from '../../infra/http/http';
 import { HealthPanel } from './domain/health-panel';
 import { GetQuestionsService } from './services/get-questions.service';
 import HealthPanelColumnsComponent from './components/health-panel-columns.component.vue';
-import SidebarComponent from '../../components/sidebar/sidebar.component.vue';
+
 import { SaveFormService } from './services/save-form.service';
+import ApresentationDialog from '../../components/apresentation-dialog/apresentation.dialog.vue';
+import { HealthPanelProcess } from './domain/health-panel-process';
 
 export default {
   components: {
     HealthPanelColumnsComponent,
-    SidebarComponent,
+    ApresentationDialog,
   },
   data() {
     return {
-      drawer: false,
-      currentMonth: new Date().getMonth() + 1,
+      saveFormService: new SaveFormService(inject(HTTP_CLIENT) as HttpClient),
+      getQuestionService: new GetQuestionsService(
+        inject(HTTP_CLIENT) as HttpClient,
+      ),
+      project: '',
+      showDialog: false,
       healthPanelProcess: new HealthPanel(),
-      months: [
-        { text: 'Janeiro', value: 1 },
-        { text: 'Fevereiro', value: 2 },
-        { text: 'Março', value: 3 },
-        { text: 'Abril', value: 4 },
-        { text: 'Maio', value: 5 },
-        { text: 'Junho', value: 6 },
-        { text: 'Julho', value: 7 },
-        { text: 'Agosto', value: 8 },
-        { text: 'Setembro', value: 9 },
-        { text: 'Outubro', value: 10 },
-        { text: 'Novembro', value: 11 },
-        { text: 'Dezembro', value: 12 },
-      ],
     };
   },
+  computed: {
+    healthProcess() {
+      return this.healthPanelProcess.process.sort(
+        (a: HealthPanelProcess, b: HealthPanelProcess) => {
+          return a.order - b.order;
+        },
+      );
+    },
+  },
   methods: {
+    async setProject(projectData: string) {
+      this.$loader.open();
+      this.showDialog = false;
+      this.project = projectData;
+
+      await this.getQuestions();
+      this.$loader.close();
+    },
     getQuestions() {
-      const httpService = inject(HTTP_CLIENT) as HttpClient;
-      const getQuestionService = new GetQuestionsService(httpService);
-      console.log(getQuestionService);
-      getQuestionService.execute().then((response) => {
-        this.healthPanelProcess = new HealthPanel(response);
+      return this.getQuestionService.execute(this.project).then((response) => {
+        this.healthPanelProcess = new HealthPanel(response, this.project);
       });
     },
     sendForm() {
-      const httpService = inject(HTTP_CLIENT) as HttpClient;
-      const saveForm = new SaveFormService(httpService);
-      saveForm.execute(this.healthPanelProcess).then((response) => {
+      this.saveFormService.execute(this.healthPanelProcess).then((response) => {
         console.log(response);
       });
     },
   },
-
-  mounted() {
-    this.getQuestions();
+  created() {
+    this.showDialog = true;
   },
 };
 </script>

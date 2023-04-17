@@ -1,6 +1,6 @@
 ```
 <template>
-  <v-dialog :model-value="value" persistent max-width="600">
+  <v-dialog z-index="100" :model-value="value" persistent max-width="600">
     <v-card>
       <v-card-title> Processos </v-card-title>
       <v-card-text>
@@ -86,7 +86,7 @@ const rules = {
 async function goToForm() {
   const { valid } = await form.value.validate();
   if (valid) {
-    emit('input', project);
+    emit('input', project.value);
   }
 }
 </script>

@@ -5,5 +5,6 @@ export const healthPanelThemeDark: ThemeDefinition = {
   colors: {
     primary: '#00d4ff',
     secondary: '#0068ff',
+    accent: '#00d4ff',
   },
 };

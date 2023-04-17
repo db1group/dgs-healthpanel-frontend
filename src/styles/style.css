@@ -73,3 +73,10 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* vuetify */
+
+.v-overlay__scrim {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+  opacity: 1 !important;
+}

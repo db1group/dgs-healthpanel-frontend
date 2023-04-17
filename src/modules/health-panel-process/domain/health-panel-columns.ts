@@ -3,9 +3,16 @@ export class HealthPanelColumns {
 
   questions: HealthPanelColumnsQuestions[];
 
-  constructor(title: string, questions: HealthPanelColumnsQuestions[] = []) {
+  order: number;
+
+  constructor(
+    title: string,
+    questions: HealthPanelColumnsQuestions[] = [],
+    order: number,
+  ) {
     this.title = title;
     this.questions = questions;
+    this.order = order;
   }
 }
 

@@ -48,11 +48,11 @@ export class MicrosoftAdService implements AuthAd {
   }
 
   private createConfig(): Msal.Configuration {
-    const your_tenant_id = import.meta.env.VITE_MICROSOFT_AD_TENANT_ID;
+    const tenantId = import.meta.env.VITE_MICROSOFT_AD_TENANT_ID;
     const msalConfig: Msal.Configuration = {
       auth: {
         clientId: import.meta.env.VITE_MICROSOFT_AD_CLIENT_ID,
-        authority: `https://login.microsoftonline.com/${your_tenant_id}`,
+        authority: `https://login.microsoftonline.com/${tenantId}`,
         redirectUri: import.meta.env.VITE_URL,
       },
       cache: {

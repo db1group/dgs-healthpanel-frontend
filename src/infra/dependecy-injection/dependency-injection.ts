@@ -1,4 +1,4 @@
-import Vue, { App } from 'vue';
+import { App } from 'vue';
 import { authStore } from '../../store/auth-store';
 import { AuthStore } from '../../store/auth-store.interface';
 import { AuthAd, AUTH_AD } from '../auth/auth-ad';
@@ -9,7 +9,7 @@ import { HttpClient, HTTP_CLIENT } from '../http/http';
 export class DependencyInjection {
   constructor(private readonly applicationVue: App<Element>) {}
 
-  execute() {
+  async execute() {
     const store: AuthStore = authStore();
     const authService: AuthAd = new MicrosoftAdService(store);
     const httpService: HttpClient = new AxiosAdapter(store);

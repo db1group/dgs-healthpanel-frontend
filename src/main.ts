@@ -1,18 +1,26 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import { createVuetify } from 'vuetify';
-import './style.css';
 import 'vuetify/styles';
+import './styles/style.css';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import { VDataTable } from 'vuetify/labs/VDataTable';
+
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import { healthPanelThemeDark } from './theme/vuetify.dark-theme';
 import App from './App.vue';
 import { DependencyInjection } from './infra/dependecy-injection/dependency-injection';
+import { router } from './router/router';
+import { GlobalServices } from './infra/global-services/global-services';
+import { LoaderInterface } from './components/loader/services/loader.interface';
 
 const pinia = createPinia();
 const vuetify = createVuetify({
-  components,
+  components: {
+    ...components,
+    VDataTable,
+  },
   directives,
   icons: {
     defaultSet: 'mdi',
@@ -29,7 +37,15 @@ const vuetify = createVuetify({
   },
 });
 
-const app = createApp(App).use(vuetify).use(pinia);
+const app = createApp(App).use(vuetify).use(pinia).use(router);
 const dependencyInjectionManager = new DependencyInjection(app);
+const globalServicesManager = new GlobalServices(app);
 dependencyInjectionManager.execute();
+globalServicesManager.execute();
 app.mount('#app');
+
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $loader: LoaderInterface;
+  }
+}
