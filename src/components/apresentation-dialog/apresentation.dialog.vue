@@ -22,15 +22,26 @@
           </v-col>
           <v-col cols="12">
             <v-form ref="form">
-              <v-select
-                label="Selecione o projeto"
-                variant="outlined"
-                :rules="[rules.required]"
-                v-model:model-value="project"
-                :items="projects"
-                item-title="title"
-                item-value="key"
-              />
+              <v-row>
+                <v-col cols="12" lg="8">
+                  <v-select
+                    label="Selecione o projeto"
+                    variant="outlined"
+                    :rules="[rules.required]"
+                    v-model:model-value="project"
+                    :items="projects"
+                    item-title="title"
+                    item-value="key"
+                  />
+                </v-col>
+                <v-col cols="12" lg="4">
+                  <v-text-field
+                    variant="outlined"
+                    label="Quantidade de liderados"
+                    v-model="quantityDevs"
+                  />
+                </v-col>
+              </v-row>
             </v-form>
           </v-col>
         </v-row>
@@ -62,6 +73,8 @@ const form = ref<any>(null);
 const emit = defineEmits(['input']);
 
 const project = ref('');
+
+const quantityDevs = ref(3);
 
 const projects = [
   { key: 'IT_AL5_BANK', title: 'Al5 Bank' },

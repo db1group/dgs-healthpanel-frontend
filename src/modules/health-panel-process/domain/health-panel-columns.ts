@@ -5,14 +5,18 @@ export class HealthPanelColumns {
 
   order: number;
 
+  additionalData: string;
+
   constructor(
     title: string,
     questions: HealthPanelColumnsQuestions[] = [],
     order: number,
+    additionalData: string,
   ) {
     this.title = title;
     this.questions = questions;
     this.order = order;
+    this.additionalData = additionalData;
   }
 }
 

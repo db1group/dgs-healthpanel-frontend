@@ -15,6 +15,8 @@ export class HealthPanel {
   format() {
     return {
       project: this.project,
+      isRetroactive: false,
+      quantityDevs: 3,
       questions: this.process.reduce(
         (acc: any[], process: HealthPanelProcess) => {
           process.columns.forEach((column) => {

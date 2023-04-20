@@ -2,16 +2,58 @@
   <div class="health-panel-process">
     <apresentation-dialog @input="setProject" :value="showDialog" />
 
-    <section class="health-panel-process__theme" v-for="theme in healthProcess">
+    <v-tabs v-model="tab" fixed-tabs color="primary">
+      <v-tab color="primary" v-for="(item, index) in getTabs" :value="index">
+        {{ item }}</v-tab
+      >
+    </v-tabs>
+
+    <v-card-text>
+      <v-window v-model="tab">
+        <v-window-item
+          v-for="theme in healthProcess"
+          class="health-panel-process__theme"
+          :key="theme.order"
+          :value="theme.order"
+        >
+          <header class="health-panel-process__theme-title">
+            {{ theme.title }}
+          </header>
+          <health-panel-columns-component
+            v-for="(item, index) in theme.columns"
+            :class="`a${index + 1}`"
+            :column="item"
+          />
+          <v-divider />
+          <v-row class="mt-10">
+            <v-col cols="12">
+              <div>
+                <h2>Informações adicionais</h2>
+              </div>
+            </v-col>
+            <v-col cols="12">
+              <v-textarea
+                variant="outlined"
+                label="Links das documentações do tópico"
+                placeholder="Links das documentações do tópico"
+              />
+            </v-col>
+          </v-row>
+        </v-window-item>
+      </v-window>
+    </v-card-text>
+
+    <!-- <section v-for="theme in healthProcess">
       <header class="health-panel-process__theme-title">
         {{ theme.title }}
       </header>
+
       <health-panel-columns-component
         v-for="(item, index) in theme.columns"
         :class="`a${index + 1}`"
         :column="item"
       />
-    </section>
+    </section> -->
     <v-card v-if="healthProcess.length">
       <v-card-actions class="my-5">
         <v-row justify="center">
@@ -49,6 +91,7 @@ export default {
   },
   data() {
     return {
+      tab: 0,
       saveFormService: new SaveFormService(inject(HTTP_CLIENT) as HttpClient),
       getQuestionService: new GetQuestionsService(
         inject(HTTP_CLIENT) as HttpClient,
@@ -65,6 +108,11 @@ export default {
           return a.order - b.order;
         },
       );
+    },
+    getTabs() {
+      return this.healthPanelProcess.process.map((item) => {
+        return item.title;
+      });
     },
   },
   methods: {
