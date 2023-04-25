@@ -2,24 +2,24 @@
   <v-card>
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
-      <v-form>
+      <v-form ref="form">
         <v-row>
           <v-col cols="12" lg="4">
             <v-text-field
               variant="outlined"
               v-model="lead.name"
+              :rules="[rules.required]"
               label="Nome do lead"
-              required
             ></v-text-field>
           </v-col>
 
           <v-col cols="12" lg="4">
             <v-select
+              :multiple="true"
               :items="projects"
               variant="outlined"
               v-model="lead.projects"
               label="Projeto"
-              required
               item-title="name"
               item-value="id"
             ></v-select>
@@ -30,7 +30,6 @@
               v-model="lead.inTraining"
               label="Em capacitação?"
               color="primary"
-              required
             />
           </v-col>
         </v-row>
@@ -54,20 +53,26 @@
 </template>
 
 <script lang="ts">
-import { Project } from '../../../project/components/entities/project';
-import { LeadEngineer } from '../entities/lead-engineer';
+import { inject } from 'vue';
+import { Project } from '../../../project/entities/project';
+import { LeadEngineer } from '../../entities/lead-engineer';
+import { LeadService } from '../../services/lead.service';
+import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
+import { ProjectService } from '../../../project/services/project.service';
+import rulesService from '../../../../infra/form-validation/rules.service';
 
 export default {
   data() {
     return {
       lead: new LeadEngineer(),
+      leadService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
+      projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
+      rules: { required: rulesService.required },
       projects: [
-        new Project([
-          {
-            id: 1,
-            name: 'Projeto 1',
-          },
-        ]),
+        new Project({
+          id: 1,
+          name: 'Projeto 1',
+        }),
       ],
     };
   },
@@ -75,8 +80,59 @@ export default {
     goToList() {
       this.$router.push({ name: 'lead-engineer-list' });
     },
-    save() {
-      console.log(this.lead);
+    async save() {
+      const { validate } = this.$refs.form as any;
+      const { valid } = await validate();
+
+      if (!valid) return;
+      debugger;
+      if (this.isEdit) {
+        this.edit();
+        return;
+      }
+      this.create();
+    },
+    create() {
+      this.leadService
+        .save(this.lead)
+        .then(() => {
+          this.$snackbar.open({
+            text: 'Projeto cadastrado com sucesso',
+            color: 'success',
+            buttonColor: 'white',
+          });
+        })
+        .catch(() => {
+          this.$snackbar.open({
+            text: 'Erro ao cadastrar projeto',
+            color: 'danger',
+            buttonColor: 'white',
+          });
+        });
+    },
+    edit() {
+      this.leadService
+        .edit(this.lead)
+        .then(() => {
+          this.$snackbar.open({
+            text: 'Projeto editado com sucesso',
+            color: 'success',
+            buttonColor: 'white',
+          });
+        })
+        .catch(() => {
+          this.$snackbar.open({
+            text: 'Erro ao editar projeto',
+            color: 'danger',
+            buttonColor: 'white',
+          });
+        });
+    },
+    async getAllProjects() {
+      this.projects = await this.projectService.getAllProjects();
+    },
+    async getLeadById(leadId: string) {
+      this.lead = await this.leadService.getLeadById(leadId);
     },
   },
   computed: {
@@ -91,6 +147,12 @@ export default {
     buttonLabel() {
       return this.isEdit ? 'Editar Lead engineer' : 'Salvar Lead engineer';
     },
+  },
+  created() {
+    const id: string = this.$route.params.id as string;
+    if (id) {
+      this.getLeadById(id);
+    }
   },
 };
 </script>

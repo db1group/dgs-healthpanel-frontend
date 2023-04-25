@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import { LeadEngineer } from '../entities/lead-engineer';
+import { LeadEngineer } from '../../entities/lead-engineer';
 
 export default {
   data() {
@@ -47,7 +47,6 @@ export default {
   },
   methods: {
     editItem(item: LeadEngineer) {
-      console.log(item);
       this.$router.push({
         name: 'lead-engineer-edit',
         params: { id: item.id },

@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <loader-component />
+    <snackbar-component />
     <sidebar-component :drawer="drawer" @input="drawer = !drawer" />
 
     <div v-if="isAuthenticated">
@@ -50,6 +51,7 @@ import { AuthAd, AUTH_AD } from './infra/auth/auth-ad';
 import { HealthPanel } from './modules/health-panel-process/domain/health-panel';
 import SidebarComponent from './components/sidebar/sidebar.component.vue';
 import LoaderComponent from './components/loader/loader.component.vue';
+import SnackbarComponent from './components/snackbar/snackbar.component.vue';
 
 const authService: AuthAd = inject(AUTH_AD) as AuthAd;
 

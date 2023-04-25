@@ -130,9 +130,22 @@ export default {
       });
     },
     sendForm() {
-      this.saveFormService.execute(this.healthPanelProcess).then((response) => {
-        console.log(response);
-      });
+      this.saveFormService
+        .execute(this.healthPanelProcess)
+        .then(() => {
+          this.$snackbar.open({
+            text: 'Formulário enviado com sucesso',
+            buttonColor: 'white',
+            color: 'success',
+          });
+        })
+        .catch(() => {
+          this.$snackbar.open({
+            text: 'Erro ao enviar o Form :(',
+            buttonColor: 'white',
+            color: 'danger',
+          });
+        });
     },
   },
   created() {

@@ -74,7 +74,6 @@ function goToPage(name: string) {
 const { drawer } = defineProps<Props>();
 
 function close(data: boolean) {
-  console.log(data);
   emit('input', false);
 }
 </script>

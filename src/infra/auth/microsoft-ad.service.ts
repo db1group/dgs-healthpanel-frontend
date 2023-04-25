@@ -22,7 +22,6 @@ export class MicrosoftAdService implements AuthAd {
             account: accounts[0],
           })
           .then((response: any) => {
-            console.log('Silent token acquisition success');
             this.insertStore(response.accessToken, response.account?.name);
             resolve(true);
           });

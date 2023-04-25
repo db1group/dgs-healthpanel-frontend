@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { Project } from '../entities/project';
+import { Project } from '../../entities/project';
 
 export default {
   data() {
@@ -52,7 +52,6 @@ export default {
   },
   methods: {
     editItem(item: Project) {
-      console.log(item);
       this.$router.push({ name: 'project-edit', params: { id: item.id } });
     },
     goToForm() {
