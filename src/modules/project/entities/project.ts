@@ -5,14 +5,14 @@ export class Project {
 
   public name: string;
 
-  public centerOfCost: string;
+  public costCenter: string;
 
   public lead: LeadEngineer[];
 
   constructor(data: any = {}) {
     this.id = data.id;
     this.name = data.name;
-    this.centerOfCost = data.centerOfCost;
+    this.costCenter = data.costCenter;
     this.lead = data.lead || [];
   }
 
@@ -20,7 +20,7 @@ export class Project {
     return {
       id: this.id,
       name: this.name,
-      centerOfCost: this.centerOfCost,
+      costCenter: this.costCenter,
       lead: this.lead.length ? this.lead.map((it) => it.id) : undefined,
     };
   }

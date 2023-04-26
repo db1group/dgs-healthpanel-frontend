@@ -20,11 +20,11 @@ export class ProjectService {
 
   save(project: Project): Promise<void> {
     const payload = project.format();
-    return this.httpClient.post('/api/projects', payload);
+    return this.httpClient.post('/projects', payload);
   }
 
   edit(project: Project): Promise<void> {
     const payload = project.format();
-    return this.httpClient.put(`/api/projects/${project.id}`, payload);
+    return this.httpClient.put(`/projects/${project.id}`, payload);
   }
 }

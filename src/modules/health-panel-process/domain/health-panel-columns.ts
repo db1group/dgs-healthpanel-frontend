@@ -1,22 +1,17 @@
 export class HealthPanelColumns {
+  id: string;
+
   title: string;
 
   questions: HealthPanelColumnsQuestions[];
 
   order: number;
 
-  additionalData: string;
-
-  constructor(
-    title: string,
-    questions: HealthPanelColumnsQuestions[] = [],
-    order: number,
-    additionalData: string,
-  ) {
-    this.title = title;
-    this.questions = questions;
-    this.order = order;
-    this.additionalData = additionalData;
+  constructor(data: any = {}) {
+    this.id = data.id;
+    this.title = data.title;
+    this.questions = data.questions;
+    this.order = data.order;
   }
 }
 

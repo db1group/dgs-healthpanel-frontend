@@ -17,7 +17,7 @@
             <v-text-field
               variant="outlined"
               :rules="[rules.required]"
-              v-model="project.centerOfCost"
+              v-model="project.costCenter"
               label="Centro de custo"
               required
             ></v-text-field>

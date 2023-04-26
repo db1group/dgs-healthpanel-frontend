@@ -1,23 +1,23 @@
 import { HealthPanelColumns } from './health-panel-columns';
 
 export class HealthPanelProcess {
+  public id: string;
+
   public title: string;
 
   public order: number;
 
+  public additionalData: number;
+
   public columns: HealthPanelColumns[];
 
-  constructor(
-    title: string,
-    columns: HealthPanelColumns[] = [],
-    order: number,
-  ) {
-    this.title = title;
-    this.order = order;
-    this.columns = columns
-      .map(
-        (it: any) => new HealthPanelColumns(it.title, it.questions, it.order),
-      )
+  constructor(data: any = {}) {
+    this.id = data.id;
+    this.title = data.title;
+    this.additionalData = data.additionalData;
+    this.order = data.order;
+    this.columns = data.columns
+      .map((it: any) => new HealthPanelColumns(it))
       .sort((a: HealthPanelColumns, b: HealthPanelColumns) => {
         return Number(a.title) > Number(b.title) ? 1 : -1;
       });
