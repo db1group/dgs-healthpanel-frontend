@@ -16,6 +16,7 @@
           <v-col cols="12" lg="4">
             <v-select
               :multiple="true"
+              return-object
               :items="projects"
               variant="outlined"
               v-model="lead.projects"
@@ -85,7 +86,6 @@ export default {
       const { valid } = await validate();
 
       if (!valid) return;
-      debugger;
       if (this.isEdit) {
         this.edit();
         return;
@@ -153,6 +153,7 @@ export default {
     if (id) {
       this.getLeadById(id);
     }
+    this.getAllProjects();
   },
 };
 </script>

@@ -5,14 +5,14 @@ export class ProjectService {
   constructor(private readonly httpClient: HttpClient) {}
 
   getAllProjects(): Promise<Project[]> {
-    return this.httpClient.get('/api/projects').then(({ data }) => {
+    return this.httpClient.get('/project').then(({ data }) => {
       return data.map((project: any) => new Project(project));
     });
   }
 
   getProjectById(id: string): Promise<Project> {
     return this.httpClient
-      .get('/api/projects', { params: { id } })
+      .get('/api/project', { params: { id } })
       .then(({ data }) => {
         return new Project(data);
       });
@@ -20,11 +20,11 @@ export class ProjectService {
 
   save(project: Project): Promise<void> {
     const payload = project.format();
-    return this.httpClient.post('/projects', payload);
+    return this.httpClient.post('/project', payload);
   }
 
   edit(project: Project): Promise<void> {
     const payload = project.format();
-    return this.httpClient.put(`/projects/${project.id}`, payload);
+    return this.httpClient.put(`/project/${project.id}`, payload);
   }
 }

@@ -22,8 +22,12 @@ export class LeadEngineer {
       name: this.name,
       inTraining: this.inTraining,
       projects: this.projects.length
-        ? this.projects.map((project) => project.id)
-        : [],
+        ? this.projects.map((project) => {
+            return {
+              id: project.id,
+            };
+          })
+        : undefined,
     };
   }
 }
