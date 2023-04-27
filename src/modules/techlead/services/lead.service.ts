@@ -14,13 +14,13 @@ export class LeadService {
   }
 
   getAllLeads(): Promise<LeadEngineer[]> {
-    return this.httpClient.get('/lead').then((data) => {
+    return this.httpClient.get('/lead').then(({ data }) => {
       return data.map((lead: any) => new LeadEngineer(lead));
     });
   }
 
   getLeadById(id: string): Promise<LeadEngineer> {
-    return this.httpClient.get('/lead', { params: { id } }).then((data) => {
+    return this.httpClient.get(`lead/${id}`).then(({ data }) => {
       return new LeadEngineer(data);
     });
   }

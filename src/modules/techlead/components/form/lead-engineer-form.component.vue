@@ -16,7 +16,6 @@
           <v-col cols="12" lg="4">
             <v-select
               :multiple="true"
-              return-object
               :items="projects"
               variant="outlined"
               v-model="lead.projects"
@@ -65,7 +64,7 @@ import rulesService from '../../../../infra/form-validation/rules.service';
 export default {
   data() {
     return {
-      lead: new LeadEngineer(),
+      lead: new LeadEngineer() as LeadEngineer,
       leadService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
       projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
       rules: { required: rulesService.required },

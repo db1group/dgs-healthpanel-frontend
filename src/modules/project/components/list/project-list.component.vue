@@ -25,29 +25,27 @@
 </template>
 
 <script lang="ts">
+import { inject } from 'vue';
 import { Project } from '../../entities/project';
+import { ProjectService } from '../../services/project.service';
+import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
 
 export default {
   data() {
     return {
       itemsPerPage: 15,
+      projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
       headers: [
         {
           title: 'Projeto',
           align: 'start',
           sortable: false,
-          key: 'project',
+          key: 'name',
         },
         { title: 'Lead', align: 'start', key: 'lead' },
         { title: 'Ações', align: 'start', key: 'actions', width: '10%' },
       ],
-      projects: [
-        {
-          id: 1,
-          project: 'Al5 Bank',
-          lead: 'Danilo Guinami',
-        },
-      ],
+      projects: [] as Project[],
     };
   },
   methods: {
@@ -57,6 +55,13 @@ export default {
     goToForm() {
       this.$router.push({ name: 'project-create' });
     },
+
+    async getAllProjects() {
+      this.projects = await this.projectService.getAllProjects();
+    },
+  },
+  created() {
+    this.getAllProjects();
   },
 };
 </script>

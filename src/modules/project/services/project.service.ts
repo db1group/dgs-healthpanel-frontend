@@ -11,11 +11,9 @@ export class ProjectService {
   }
 
   getProjectById(id: string): Promise<Project> {
-    return this.httpClient
-      .get('/api/project', { params: { id } })
-      .then(({ data }) => {
-        return new Project(data);
-      });
+    return this.httpClient.get(`/project/${id}`).then(({ data }) => {
+      return new Project(data);
+    });
   }
 
   save(project: Project): Promise<void> {

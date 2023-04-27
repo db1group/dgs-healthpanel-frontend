@@ -148,6 +148,7 @@ export default {
     if (id) {
       this.getProjectById(id);
     }
+    this.getAllLeads();
   },
 };
 </script>

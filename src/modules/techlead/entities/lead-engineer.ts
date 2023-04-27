@@ -1,5 +1,3 @@
-import { Project } from '../../project/entities/project';
-
 export class LeadEngineer {
   public id: string;
 
@@ -7,13 +5,17 @@ export class LeadEngineer {
 
   public inTraining: boolean;
 
-  public projects: Project[];
+  public projects: string[];
 
   constructor(data: any = {}) {
     this.id = data.id;
     this.name = data.name;
     this.inTraining = data.inTraining === false;
-    this.projects = data.projects || [];
+    this.projects = this.getProjectsId(data.leadProjects || []);
+  }
+
+  private getProjectsId(projects: { projectId: string }[] = []) {
+    return projects.map((project) => project.projectId);
   }
 
   format() {
@@ -21,10 +23,10 @@ export class LeadEngineer {
       id: this.id,
       name: this.name,
       inTraining: this.inTraining,
-      projects: this.projects.length
+      leadProjects: this.projects.length
         ? this.projects.map((project) => {
             return {
-              id: project.id,
+              projectId: project,
             };
           })
         : undefined,

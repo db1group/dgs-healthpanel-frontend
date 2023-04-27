@@ -27,22 +27,21 @@
 </template>
 
 <script lang="ts">
+import { inject } from 'vue';
 import { LeadEngineer } from '../../entities/lead-engineer';
+import { LeadService } from '../../services/lead.service';
+import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
 
 export default {
   data() {
     return {
       itemsPerPage: 15,
+      leadService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
       headers: [
         { title: 'Lead', align: 'start', key: 'name' },
         { title: 'Ações', align: 'start', key: 'actions', width: '10%' },
       ],
-      leads: [
-        {
-          id: 1,
-          name: 'Danilo Guinami',
-        },
-      ],
+      leads: [] as LeadEngineer[],
     };
   },
   methods: {
@@ -55,6 +54,13 @@ export default {
     goToForm() {
       this.$router.push({ name: 'lead-engineer-create' });
     },
+
+    async getAllLeads() {
+      this.leads = await this.leadService.getAllLeads();
+    },
+  },
+  created() {
+    this.getAllLeads();
   },
 };
 </script>
