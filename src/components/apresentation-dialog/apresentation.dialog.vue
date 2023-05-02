@@ -23,22 +23,15 @@
           <v-col cols="12">
             <v-form ref="form">
               <v-row>
-                <v-col cols="12" lg="8">
+                <v-col cols="12" lg="12">
                   <v-select
                     label="Selecione o projeto"
                     variant="outlined"
                     :rules="[rules.required]"
                     v-model:model-value="project"
                     :items="projects"
-                    item-title="title"
-                    item-value="key"
-                  />
-                </v-col>
-                <v-col cols="12" lg="4">
-                  <v-text-field
-                    variant="outlined"
-                    label="Quantidade de liderados"
-                    v-model="quantityDevs"
+                    item-title="name"
+                    item-value="id"
                   />
                 </v-col>
               </v-row>
@@ -62,6 +55,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { Project } from '../../modules/project/entities/project';
+import { ProjectService } from '../../modules/project/services/project.service';
+import { inject } from 'vue';
+import { HTTP_CLIENT, HttpClient } from '../../infra/http/http';
+import { reactive } from 'vue';
+import { onMounted } from 'vue';
 
 interface Props {
   value: boolean;
@@ -76,25 +75,18 @@ const project = ref('');
 
 const quantityDevs = ref(3);
 
-const projects = [
-  { key: 'IT_AL5_BANK', title: 'Al5 Bank' },
-  { key: 'DB1_AVENUE', title: 'Avenue' },
-  { key: 'IT_EBANX', title: 'Ebanx' },
-  { key: 'IT_OMNI_BANCO', title: 'Omn iBanco' },
-  { key: 'IT_OMNI_FINANCEIRA', title: 'Omni Financeira' },
-  { key: 'DB1_PLAENGE', title: 'Plaenge' },
-  { key: 'IT_SENAC_2020', title: 'Senac' },
-  { key: 'DB1_XP', title: 'Xp' },
-  { key: 'DB1_ZOOP', title: 'Zoop' },
-  { key: 'DB1_ITSSEG', title: 'Its seg' },
-  { key: 'DB1_ROYAL', title: 'Royal' },
-  { key: 'DB1_EXIGO', title: 'Exigo' },
-  { key: 'DB1_ARISTOTLE', title: 'Aristotle' },
-];
+const projects: Project[] = reactive([]);
 
 const rules = {
   required: (v: any) => !!v || 'Campo obrigatório',
 };
+
+async function getProjects() {
+  const projectService = new ProjectService(inject(HTTP_CLIENT) as HttpClient);
+
+  const listProjects = await projectService.getAllProjects();
+  projects.push(...listProjects);
+}
 
 async function goToForm() {
   const { valid } = await form.value.validate();
@@ -102,4 +94,8 @@ async function goToForm() {
     emit('input', project.value);
   }
 }
+
+onMounted(() => {
+  getProjects();
+});
 </script>

@@ -100,6 +100,7 @@ export default {
             color: 'success',
             buttonColor: 'white',
           });
+          this.$router.push({ name: 'lead-engineer-list' });
         })
         .catch(() => {
           this.$snackbar.open({
@@ -118,6 +119,8 @@ export default {
             color: 'success',
             buttonColor: 'white',
           });
+
+          this.$router.push({ name: 'lead-engineer-list' });
         })
         .catch(() => {
           this.$snackbar.open({

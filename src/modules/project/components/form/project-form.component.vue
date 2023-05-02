@@ -24,6 +24,7 @@
           </v-col>
           <v-col cols="12" lg="4">
             <v-select
+              multiple
               :items="leads"
               variant="outlined"
               v-model="project.lead"
@@ -98,6 +99,7 @@ export default {
             color: 'success',
             buttonColor: 'white',
           });
+          this.$router.push({ name: 'project-list' });
         })
         .catch(() => {
           this.$snackbar.open({
@@ -116,6 +118,7 @@ export default {
             color: 'success',
             buttonColor: 'white',
           });
+          this.$router.push({ name: 'project-list' });
         })
         .catch(() => {
           this.$snackbar.open({

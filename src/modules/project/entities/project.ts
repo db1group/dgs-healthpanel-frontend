@@ -13,7 +13,7 @@ export class Project {
     this.id = data.id;
     this.name = data.name;
     this.costCenter = data.costCenter;
-    this.lead = data.lead || [];
+    this.lead = data.leadProject || [];
   }
 
   format() {
@@ -21,7 +21,9 @@ export class Project {
       id: this.id,
       name: this.name,
       costCenter: this.costCenter,
-      lead: this.lead.length ? this.lead.map((it) => it.id) : undefined,
+      leadProject: this.lead.length
+        ? this.lead.map((it) => ({ LeadId: it }))
+        : undefined,
     };
   }
 }

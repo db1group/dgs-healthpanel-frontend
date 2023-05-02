@@ -16,7 +16,7 @@ export class HealthPanel {
       isRetroactive: false,
       quantityDevs: 3,
       pillars: this.process.map((it) => ({
-        id: it.id,
+        PillarId: it.id,
         additionalData: it.additionalData,
       })),
       questions: this.process.reduce(
