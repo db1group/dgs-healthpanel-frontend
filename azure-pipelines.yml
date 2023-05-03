@@ -11,18 +11,17 @@ pool:
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: "18.x"
-    displayName: "Install Node.js"
+      versionSpec: '18.x'
+    displayName: 'Install Node.js'
 
   - script: |
       npm install
       npm run build
-    displayName: "npm install and build"
+    displayName: 'npm install and build'
   - task: AmazonWebServices.aws-vsts-tools.S3Upload.S3Upload@1
     inputs:
-      awsCredentials: "AWS Connection for engineer team"
-      regionName: "us-east-1"
-      bucketName: "healthpanel.db1.com.br"
-      sourceFolder: "dist"
-      globExpressions: "**"
-      filesAcl: "public-read"
+      awsCredentials: 'AWS Connection for engineer team'
+      regionName: 'us-east-1'
+      bucketName: 'healthpanel.db1.com.br'
+      sourceFolder: 'dist'
+      globExpressions: '**'
