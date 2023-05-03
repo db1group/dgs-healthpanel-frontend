@@ -21,7 +21,6 @@
         v-if="!snackbar.hideDefaultBtn"
         @click="snackbar.show = false"
         :color="snackbar.buttonColor"
-        text
       >
         Fechar
       </v-btn>
@@ -29,7 +28,6 @@
         v-if="snackbar.callback && snackbar.callback.action"
         @click="snackbarAction"
         :color="snackbar.buttonColor"
-        text
       >
         {{ snackbar.callback.label }}
       </v-btn>
@@ -38,21 +36,21 @@
 </template>
 
 <script lang="ts">
-export default {
-  data() {
-    return {
-      snackbar: this.$snackbar,
-    };
-  },
-  methods: {
-    snackbarAction() {
-      if (this.snackbar.callback) {
-        this.snackbar.callback.action();
-      }
+  export default {
+    data() {
+      return {
+        snackbar: this.$snackbar,
+      };
     },
-  },
-  created() {
-    this.snackbar = this.$snackbar;
-  },
-};
+    methods: {
+      snackbarAction() {
+        if (this.snackbar.callback) {
+          this.snackbar.callback.action();
+        }
+      },
+    },
+    created() {
+      this.snackbar = this.$snackbar;
+    },
+  };
 </script>
