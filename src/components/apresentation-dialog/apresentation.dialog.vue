@@ -54,13 +54,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, reactive, onMounted, inject } from 'vue';
 import { Project } from '../../modules/project/entities/project';
 import { ProjectService } from '../../modules/project/services/project.service';
-import { inject } from 'vue';
 import { HTTP_CLIENT, HttpClient } from '../../infra/http/http';
-import { reactive } from 'vue';
-import { onMounted } from 'vue';
+
 
 interface Props {
   value: boolean;

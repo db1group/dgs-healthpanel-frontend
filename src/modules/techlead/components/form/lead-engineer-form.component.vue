@@ -64,7 +64,7 @@ import rulesService from '../../../../infra/form-validation/rules.service';
 export default {
   data() {
     return {
-      lead: new LeadEngineer() as LeadEngineer,
+      lead: new LeadEngineer(),
       leadService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
       projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
       rules: { required: rulesService.required },
@@ -93,7 +93,7 @@ export default {
     },
     create() {
       this.leadService
-        .save(this.lead)
+        .save(this.lead as LeadEngineer)
         .then(() => {
           this.$snackbar.open({
             text: 'Projeto cadastrado com sucesso',
@@ -112,7 +112,7 @@ export default {
     },
     edit() {
       this.leadService
-        .edit(this.lead)
+        .edit(this.lead as LeadEngineer)
         .then(() => {
           this.$snackbar.open({
             text: 'Projeto editado com sucesso',

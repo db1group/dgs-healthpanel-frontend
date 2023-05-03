@@ -43,17 +43,6 @@
       </v-window>
     </v-card-text>
 
-    <!-- <section v-for="theme in healthProcess">
-      <header class="health-panel-process__theme-title">
-        {{ theme.title }}
-      </header>
-
-      <health-panel-columns-component
-        v-for="(item, index) in theme.columns"
-        :class="`a${index + 1}`"
-        :column="item"
-      />
-    </section> -->
     <v-card v-if="healthProcess.length">
       <v-card-actions class="my-5">
         <v-row justify="center">

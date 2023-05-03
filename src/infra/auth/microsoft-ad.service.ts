@@ -7,33 +7,40 @@ export class MicrosoftAdService implements AuthAd {
   constructor(private readonly storeService: AuthStore) {}
 
   connect(): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const config = this.createConfig();
       const msalInstance = new Msal.PublicClientApplication(config);
 
-      var loginRequest = {
-        scopes: ['user.read'], // optional Array<string>
+      const loginRequest = {
+        scopes: this.getScopes(),
       };
-      const accounts = msalInstance.getAllAccounts();
-      if (accounts.length) {
-        return msalInstance
-          .acquireTokenSilent({
-            scopes: this.getScopes(),
-            account: accounts[0],
-          })
-          .then((response: any) => {
-            this.insertStore(response.accessToken, response.account?.name);
-            resolve(true);
-          });
-      }
+      const handleResponse = (response: any) => {
+        if (response !== null) {
+          this.insertStore(response.accessToken, response.account?.name);
+          resolve(true);
+          return;
+        }
 
-      try {
-        const response: any = await msalInstance.loginPopup(loginRequest);
-        this.insertStore(response.accessToken, response.account?.name);
-        resolve(true);
-      } catch (err) {
-        reject(err);
-      }
+        const currentAccounts = msalInstance.getAllAccounts();
+        if (currentAccounts.length === 0) {
+          msalInstance.loginRedirect(loginRequest);
+        } else if (currentAccounts.length) {
+          return msalInstance
+            .acquireTokenSilent({
+              scopes: this.getScopes(),
+              account: currentAccounts[0],
+            })
+            .then((response: any) => {
+              this.insertStore(response.accessToken, response.account?.name);
+              resolve(true);
+            })
+            .catch((err) => {
+              reject(err);
+            });
+        }
+      };
+
+      msalInstance.handleRedirectPromise().then(handleResponse);
     });
   }
 
@@ -43,7 +50,7 @@ export class MicrosoftAdService implements AuthAd {
   }
 
   private getScopes() {
-    return ['user.read'];
+    return [`api://${import.meta.env.VITE_MICROSOFT_AD_CLIENT_ID}/ReadAccess`];
   }
 
   private createConfig(): Msal.Configuration {

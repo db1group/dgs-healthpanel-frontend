@@ -1,4 +1,3 @@
-import { reactive } from 'vue';
 import { LoaderInterface } from './loader.interface';
 
 class LoaderService implements LoaderInterface {

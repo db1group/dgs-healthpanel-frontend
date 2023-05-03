@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Form from '../modules/health-panel-process/health-panel-process.component.vue';
 import Report from '../modules/report/report.vue';
 import Ranking from '../modules/ranking/ranking.vue';
-import HealthPanelBI from '../modules/health-panel-bi/health-panel-bi.vue';
+import HealthPanelBI from '../modules/health-panel-chart/health-panel-bi.vue';
 import projectModule from '../modules/project/router';
 import techLeadModule from '../modules/techlead/router';
 

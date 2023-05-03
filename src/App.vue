@@ -90,5 +90,3 @@ function reactive(arg0: HealthPanel) {
   throw new Error('Function not implemented.');
 }
 </script>
-
-<style scoped></style>

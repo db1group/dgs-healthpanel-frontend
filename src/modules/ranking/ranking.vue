@@ -19,9 +19,7 @@
                         {{ item.position }}
                       </h1>
                     </div>
-                    <!-- <v-avatar v-if="item.position <= 3" size="40">
-                      <v-img :src="item.prependAvatar" />
-                    </v-avatar> -->
+
                   </v-row>
                 </v-col>
                 <v-col cols="4">
@@ -38,20 +36,6 @@
         </v-col>
       </v-row>
 
-      <!-- <v-list :items="items" item-props lines="three">
-        <template v-slot:img="{ item }">
-          <v-img max-width="100px" :src="getLeadbordIcon(item.position)" />
-        </template>
-
-        <template v-slot:title="{ title, item }">
-          <div>
-            {{ title }}
-          </div>
-        </template>
-        <template v-slot:subtitle="{ subtitle }">
-          <div v-html="subtitle"></div>
-        </template>
-      </v-list> -->
     </v-card-text>
   </v-card>
 </template>

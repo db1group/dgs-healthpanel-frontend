@@ -30,7 +30,7 @@ class SnackbarService implements SnackbarInterface {
 
   public hideDefaultBtn = false;
 
-  public callback?: { action: any; label: any } | undefined;
+  public callback?: { action: any; label: any };
 
   public open(data: SnackbarContentInterface) {
     this.text = data.text || '';
