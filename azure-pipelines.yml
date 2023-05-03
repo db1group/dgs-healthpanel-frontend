@@ -5,26 +5,26 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "10.x"
+    displayName: "Install Node.js"
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
-- task: S3Upload@1
-  inputs:
-    awsCredentials: 'AWS Connection for engineer team'
-    regionName: 'us-east-1'
-    bucketName: 'healthpanel.db1.com.br'
-    sourceFolder: 'dist'
-    globExpressions: '**'
-    filesAcl: 'public-read'
+  - script: |
+      npm install
+      npm run build
+    displayName: "npm install and build"
+  - task: S3Upload@1
+    inputs:
+      awsCredentials: "AWS Connection for engineer team"
+      regionName: "us-east-1"
+      bucketName: "healthpanel.db1.com.br"
+      sourceFolder: "dist"
+      globExpressions: "**"
+      filesAcl: "public-read"
