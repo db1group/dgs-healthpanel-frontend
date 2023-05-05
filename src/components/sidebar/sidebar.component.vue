@@ -54,6 +54,12 @@
         value="techlead"
         @click="goToPage('lead-engineer-list')"
       ></v-list-item>
+      <v-spacer></v-spacer>
+      <v-list-item
+        title="Download DB1 CLI"
+        prepend-icon="mdi-terminal"
+        @click="downloadCli"
+      ></v-list-item>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -74,6 +80,13 @@
     router.push({
       name,
     });
+  }
+
+  function downloadCli() {
+    window.open(
+      'https://github.com/db1group/dgs-cli/releases/download/v1.0.0/dgscli-1.0.0.zip',
+      '_blank',
+    );
   }
 
   const { drawer } = defineProps<Props>();

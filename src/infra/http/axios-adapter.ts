@@ -6,7 +6,7 @@ export class AxiosAdapter implements HttpClient {
   private http: any;
   constructor(private readonly storeService: AuthStore) {
     this.http = axios.create({
-      baseURL: '/api',
+      baseURL: import.meta.env.VITE_BACKEND_URL,
     });
     this.addInterceptors();
   }
