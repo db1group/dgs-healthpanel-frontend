@@ -2,7 +2,7 @@ import * as DateFNS from 'date-fns';
 import { DateService } from './date-service';
 
 export class DateFnsAdapter implements DateService {
-  format(date: Date, mask: string = 'DD/MM/YYYY'): string {
+  format(date: Date, mask: string = 'DD/MM/yyyy'): string {
     return DateFNS.format(date, mask);
   }
 

@@ -3,24 +3,93 @@
     <v-card-title> Resultados </v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="12" lg="2">
-          <ul>
-            {{
-              filter.projectsIds
-            }}
-            <v-checkbox
-              v-for="project in projects"
-              :key="project.id"
-              v-model="filter.projectsIds"
-              :label="project.name"
-              :value="project.id"
-            ></v-checkbox>
-          </ul>
+        <v-col cols="12" lg="3">
+          <v-expansion-panels :max="500">
+            <v-expansion-panel title="Data">
+              <v-expansion-panel-text
+                style="max-height: 500px"
+                class="overflow-auto"
+              >
+                <v-checkbox
+                  density="compact"
+                  v-for="date in years"
+                  :key="date"
+                  v-model="filter.years"
+                  hide-details
+                  :label="date"
+                  :value="date"
+                ></v-checkbox>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+            <v-expansion-panel title="Centro de custos">
+              <v-expansion-panel-text
+                style="max-height: 500px"
+                class="overflow-auto"
+              >
+                <v-checkbox
+                  density="compact"
+                  v-for="costCenter in costCenters"
+                  :key="costCenter"
+                  v-model="filter.costCenter"
+                  hide-details
+                  :label="costCenter"
+                  :value="costCenter"
+                ></v-checkbox>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+            <v-expansion-panel title="Projetos">
+              <v-expansion-panel-text
+                style="max-height: 500px"
+                class="overflow-auto"
+              >
+                <v-checkbox
+                  density="compact"
+                  v-for="project in projects"
+                  :key="project.id"
+                  v-model="filter.projectIds"
+                  hide-details
+                  :label="project.name"
+                  :value="project.id"
+                ></v-checkbox>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+          <v-row class="mt-5">
+            <v-col>
+              <v-btn @click="getDataSet" block color="primary">
+                Aplicar filtros
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-col>
-        <v-col cols="12" lg="10">
-          <div style="max-width: 80vw">
-            <canvas ref="myChart" />
-          </div>
+        <v-col cols="12" lg="9" v-if="chartDataSet.labels.length">
+          <v-tabs v-model="tab" fixed-tabs color="primary">
+            <v-tab
+              color="primary"
+              v-for="(item, index) in tabs"
+              :value="item.value"
+            >
+              {{ item.name }}</v-tab
+            >
+          </v-tabs>
+          <v-window v-model="tab">
+            <v-window-item
+              v-for="item in tabs"
+              class="health-panel-process__theme"
+              :key="item.value"
+              :value="item.value"
+            >
+              <v-row>
+                <v-col cols="11">
+                  <component
+                    :chart-data-set="chartDataSet"
+                    :dates="dates"
+                    :is="item.component"
+                  />
+                </v-col>
+              </v-row>
+            </v-window-item>
+          </v-window>
         </v-col>
       </v-row>
     </v-card-text>
@@ -28,113 +97,100 @@
 </template>
 
 <script lang="ts">
-  import { Chart } from 'chart.js';
-  import { HealthPanelChartService } from './services/health-panel-chart.service';
+  import { ChartFilter } from './entities/chart-filter';
+  import { Project } from '../project/entities/project';
+
+  import ChartHealthPanel from './components/chart/chart-health-panel.component.vue';
+  import ReportAnalyticComponent from './components/analytics/report-analytic.component.vue';
+  import { markRaw } from 'vue';
+  import { ProjectService } from '../project/services/project.service';
   import { inject } from 'vue';
   import { HTTP_CLIENT, HttpClient } from '../../infra/http/http';
-  import { ChartFilter } from './entities/chart-filter';
-  import { ProjectService } from '../project/services/project.service';
-  import { Project } from '../project/entities/project';
   import {
     DATE_SERVICE,
     DateService,
   } from '../../infra/date-service/date-service';
+  import { HealthPanelChartService } from './services/health-panel-chart.service';
   import { ChartjsAdapter } from './entities/chartjs-adapter';
-  // import { HealthPanelChart } from './entities/health-panel-chart';
-  // import { ChartjsAdapter } from './entities/chartjs-adapter';
+  import { HealthScoreBackendDTO } from './dto/health-score-backend.dto';
 
   export default {
     data: () => ({
       projects: [] as Project[],
       filter: new ChartFilter(),
-      chartDataSet: [],
+      projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
+      healthPanelChartService: new HealthPanelChartService(
+        inject(HTTP_CLIENT) as HttpClient,
+      ),
+      chartDataSet: { labels: [] } as any,
+      dates: [] as string[],
+      years: ['2022', '2023'],
+      costCenters: [] as string[],
+      dateService: inject(DATE_SERVICE) as DateService,
+      tabs: [
+        {
+          name: 'Relatório geral',
+          value: 0,
+          component: markRaw(ChartHealthPanel),
+        },
+        {
+          name: 'Relatório analítico',
+          value: 1,
+          component: markRaw(ReportAnalyticComponent),
+        },
+      ],
+      tab: 0,
     }),
-    async mounted() {
-      await this.getDataSet();
-      this.getProjects();
-      this.startChart();
-    },
     methods: {
+      async getAllProjects() {
+        this.projects = await this.projectService.getAllProjects();
+      },
+
+      getDates(data: HealthScoreBackendDTO[] = []) {
+        return data
+          .reduce((acc: any[], value: HealthScoreBackendDTO) => {
+            const hasData = acc.findIndex((it: any) => it === value.date);
+            if (hasData >= 0) return acc;
+            acc.push(value.date);
+            return acc;
+          }, [])
+          .sort((a: string, b: string) =>
+            this.dateService.isAfter(new Date(a), new Date(b)) ? 1 : -1,
+          )
+          .map((it: string) =>
+            this.dateService.format(new Date(it), 'MMM - yyyy'),
+          );
+      },
+      getCostCenters(data: HealthScoreBackendDTO[] = []) {
+        return data
+          .reduce((acc: any[], value: HealthScoreBackendDTO) => {
+            const hasData = acc.findIndex(
+              (it: any) => it === value.costCenterName,
+            );
+            if (hasData >= 0) return acc;
+            acc.push(value.costCenterName);
+            return acc;
+          }, [])
+          .sort((a: string, b: string) => (a > b ? 1 : -1));
+      },
       async getDataSet() {
-        const healthPanelChartService = new HealthPanelChartService(
-          inject(HTTP_CLIENT) as HttpClient,
+        const data = await this.healthPanelChartService.getDataSet(
+          this.filter as ChartFilter,
         );
-        const projectService = new ProjectService(
-          inject(HTTP_CLIENT) as HttpClient,
-        );
+        this.chartDataSet = { labels: [] };
+        this.$nextTick(() => {
+          this.dates = this.getDates(data);
+          this.costCenters = this.getCostCenters(data);
 
-        const dateService = inject(DATE_SERVICE) as DateService;
-
-        const data = await healthPanelChartService.getDataSet();
-
-        this.chartDataSet = new ChartjsAdapter(dateService).formatToChart(data);
+          this.chartDataSet = new ChartjsAdapter(
+            this.dateService,
+          ).formatToChart(data, this.dates);
+        });
       },
-
-      async getProjects() {
-        this.projects = [
-          new Project({
-            id: 'd390ed7c-ccb0-463f-8dc9-ab88826348a4',
-            name: 'AL5 Bank',
-            costCenter: 'AL5',
-            lead: ['Danilo Guinami'],
-          }),
-          new Project({
-            id: '0fbb9a82-0476-44b7-9c6b-443eb05f25ee',
-            name: 'Plaenge',
-            costCenter: 'Plaenge',
-            lead: ['Danilo Guinami'],
-          }),
-        ];
-        // this.projects = await projectService.getAllProjects();
-      },
-
-      startChart() {
-        // const chartJSFormatter = new ChartjsAdapter();
-        const chartElement = this.$refs['myChart'] as HTMLCanvasElement;
-        const ctx = chartElement.getContext('2d') as CanvasRenderingContext2D;
-        (() =>
-          new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: [
-                'Janeiro',
-                'Fevereiro',
-                'Março',
-                'Abril',
-                'Maio',
-                'Junho',
-                'Julho',
-                'Agosto',
-                'Setembro',
-                'Outubro',
-                'Novembro',
-                'Dezembro',
-              ],
-
-              datasets: this.chartDataSet,
-            },
-            options: {
-              plugins: {
-                title: {
-                  display: true,
-                },
-                tooltip: {
-                  usePointStyle: true,
-                  enabled: true,
-                  mode: 'dataset',
-                },
-              },
-              responsive: true,
-
-              scales: {
-                y: {
-                  suggestedMin: 30,
-                  suggestedMax: 100,
-                },
-              },
-            },
-          }))();
-      },
+    },
+    created() {
+      this.getAllProjects();
+      this.getDataSet();
     },
   };
 </script>

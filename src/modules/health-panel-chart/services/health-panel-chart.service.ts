@@ -1,27 +1,19 @@
 import { HttpClient } from '../../../infra/http/http';
-import { HealthPanelChart } from '../entities/health-panel-chart';
+import { HealthScoreBackendDTO } from '../dto/health-score-backend.dto';
+import { ChartFilter } from '../entities/chart-filter';
 
 export class HealthPanelChartService {
   constructor(private readonly http: HttpClient) {}
 
-  getDataSet(): Promise<HealthScoreBackendDTO[]> {
-    return this.http.get('/evaluation').then(({ data }) => {
-      const response: HealthScoreBackendDTO[] = data;
-      return response;
-    });
+  getDataSet(filter?: ChartFilter): Promise<HealthScoreBackendDTO[]> {
+    const data = filter?.format();
+    return this.http
+      .get('/evaluation', {
+        params: data,
+      })
+      .then(({ data }) => {
+        const response: HealthScoreBackendDTO[] = data;
+        return response;
+      });
   }
 }
-
-export type HealthScoreBackendDTO = {
-  date: string;
-
-  healthScore: string;
-
-  metricsHealthScore: string;
-
-  processHealthScore: string;
-
-  projectId: string;
-
-  projectName: string;
-};

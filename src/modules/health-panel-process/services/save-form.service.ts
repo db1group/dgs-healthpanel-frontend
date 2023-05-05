@@ -6,6 +6,6 @@ export class SaveFormService {
 
   async execute(form: HealthPanel): Promise<any> {
     const payload = form.format();
-    return this.http.put('/answer', payload).then(({ data }) => data);
+    return this.http.post('/answer', payload).then(({ data }) => data);
   }
 }

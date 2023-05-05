@@ -1,5 +1,5 @@
-import { HealthPanelChart } from './health-panel-chart';
+import { HealthScoreBackendDTO } from '../dto/health-score-backend.dto';
 
 export interface ChartAdapter<T> {
-  formatToChart(data: HealthPanelChart): T;
+  formatToChart(data: HealthScoreBackendDTO[], dates: string[]): T;
 }
