@@ -9,20 +9,22 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 steps:
-  - task: NodeTool@0
-    env:
-      VITE_MICROSOFT_AD_CLIENT_ID: $(MICROSOFT_AD_CLIENT_ID)
-      VITE_MICROSOFT_AD_TENANT_ID: $(MICROSOFT_AD_TENANT_ID)
-      VITE_URL: $(URL)
-      VITE_BACKEND_URL: $(BACKEND_URL)
+  - task: NodeTool@0  
 
     inputs:
       versionSpec: '18.x'
     displayName: 'Install Node.js'
 
   - script: |
+      echo $(MICROSOFT_AD_CLIENT_ID)
       npm install
       npm run build
+       
+    env:
+      VITE_MICROSOFT_AD_CLIENT_ID: $(MICROSOFT_AD_CLIENT_ID)
+      VITE_MICROSOFT_AD_TENANT_ID: $(MICROSOFT_AD_TENANT_ID)
+      VITE_URL: $(URL)
+      VITE_BACKEND_URL: $(BACKEND_URL)
     displayName: 'npm install and build'
   - task: AmazonWebServices.aws-vsts-tools.S3Upload.S3Upload@1
     inputs:
