@@ -20,30 +20,35 @@
         value="form"
       ></v-list-item>
       <v-list-item
+        v-if="false"
         prepend-icon="mdi-forum"
         title="Relatório"
         value="report"
         @click="goToPage('report')"
       ></v-list-item>
       <v-list-item
+        v-if="false"
         title="Ranking"
         prepend-icon="mdi-podium-gold"
         value="ranking"
         @click="goToPage('ranking')"
       ></v-list-item>
       <v-list-item
+        v-if="false"
         title="Painel de saúde"
         prepend-icon="mdi-chart-line"
         value="health-panel-bi"
         @click="goToPage('health-panel-bi')"
       ></v-list-item>
       <v-list-item
+        v-if="false"
         title="Projetos"
         prepend-icon="mdi-domain"
         value="project"
         @click="goToPage('project-list')"
       ></v-list-item>
       <v-list-item
+        v-if="false"
         title="Lead engineer"
         prepend-icon="mdi-account-group"
         value="techlead"
@@ -54,26 +59,26 @@
 </template>
 
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
-import { authStore } from '../../store/auth-store';
+  import { useRouter } from 'vue-router';
+  import { authStore } from '../../store/auth-store';
 
-const emit = defineEmits(['input']);
-const store = authStore();
-const router = useRouter();
+  const emit = defineEmits(['input']);
+  const store = authStore();
+  const router = useRouter();
 
-interface Props {
-  drawer: boolean;
-}
+  interface Props {
+    drawer: boolean;
+  }
 
-function goToPage(name: string) {
-  router.push({
-    name,
-  });
-}
+  function goToPage(name: string) {
+    router.push({
+      name,
+    });
+  }
 
-const { drawer } = defineProps<Props>();
+  const { drawer } = defineProps<Props>();
 
-function close(data: boolean) {
-  emit('input', false);
-}
+  function close(data: boolean) {
+    emit('input', false);
+  }
 </script>

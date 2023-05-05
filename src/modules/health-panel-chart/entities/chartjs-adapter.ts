@@ -4,7 +4,7 @@ import { HealthPanelChart } from './health-panel-chart';
 export class ChartjsAdapter implements ChartAdapter<ChartJSOutput> {
   formatToChart(data: HealthPanelChart): ChartJSOutput {
     return {
-      label: data.name,
+      label: data.projectId,
       borderWidth: 1,
       data: [],
     };

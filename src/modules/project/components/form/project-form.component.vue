@@ -27,7 +27,7 @@
               multiple
               :items="leads"
               variant="outlined"
-              v-model="project.lead"
+              v-model="project.leads"
               label="Lead do projeto"
               required
               item-title="name"

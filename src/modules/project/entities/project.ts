@@ -7,13 +7,24 @@ export class Project {
 
   public costCenter: string;
 
-  public lead: LeadEngineer[];
+  public leads: LeadEngineer[];
 
   constructor(data: any = {}) {
     this.id = data.id;
     this.name = data.name;
     this.costCenter = data.costCenter;
-    this.lead = data.leadProject || [];
+    this.leads = data.leadProjects?.length
+      ? this.getLeads(data.leadProjects)
+      : [];
+  }
+
+  private getLeads(leadProjects: any): LeadEngineer[] {
+    if (!leadProjects || !leadProjects.length) {
+      return [];
+    }
+    return leadProjects
+      .map((it: any) => new LeadEngineer(it.lead))
+      .filter((it: LeadEngineer) => it);
   }
 
   format() {
@@ -21,8 +32,8 @@ export class Project {
       id: this.id,
       name: this.name,
       costCenter: this.costCenter,
-      leadProject: this.lead.length
-        ? this.lead.map((it) => ({ LeadId: it }))
+      leadProject: this.leads.length
+        ? this.leads.map((it) => ({ LeadId: it }))
         : undefined,
     };
   }
