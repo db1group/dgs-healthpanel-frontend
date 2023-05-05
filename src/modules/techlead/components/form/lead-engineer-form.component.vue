@@ -12,7 +12,6 @@
               label="Nome do lead"
             ></v-text-field>
           </v-col>
-
           <v-col cols="12" lg="4">
             <v-select
               :multiple="true"
@@ -89,7 +88,7 @@
           .save(this.lead as LeadEngineer)
           .then(() => {
             this.$snackbar.open({
-              text: 'Projeto cadastrado com sucesso',
+              text: 'Lead cadastrado com sucesso',
               color: 'success',
               buttonColor: 'white',
             });
@@ -97,7 +96,7 @@
           })
           .catch(() => {
             this.$snackbar.open({
-              text: 'Erro ao cadastrar projeto',
+              text: 'Erro ao cadastrar lead',
               color: 'danger',
               buttonColor: 'white',
             });
@@ -108,7 +107,7 @@
           .edit(this.lead as LeadEngineer)
           .then(() => {
             this.$snackbar.open({
-              text: 'Projeto editado com sucesso',
+              text: 'Lead editado com sucesso',
               color: 'success',
               buttonColor: 'white',
             });
@@ -117,7 +116,7 @@
           })
           .catch(() => {
             this.$snackbar.open({
-              text: 'Erro ao editar projeto',
+              text: 'Erro ao editar lead',
               color: 'danger',
               buttonColor: 'white',
             });

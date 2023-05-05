@@ -35,6 +35,11 @@
   import { ChartFilter } from './entities/chart-filter';
   import { ProjectService } from '../project/services/project.service';
   import { Project } from '../project/entities/project';
+  import {
+    DATE_SERVICE,
+    DateService,
+  } from '../../infra/date-service/date-service';
+  import { ChartjsAdapter } from './entities/chartjs-adapter';
   // import { HealthPanelChart } from './entities/health-panel-chart';
   // import { ChartjsAdapter } from './entities/chartjs-adapter';
 
@@ -42,9 +47,10 @@
     data: () => ({
       projects: [] as Project[],
       filter: new ChartFilter(),
+      chartDataSet: [],
     }),
-    mounted() {
-      this.getDataSet();
+    async mounted() {
+      await this.getDataSet();
       this.getProjects();
       this.startChart();
     },
@@ -53,14 +59,18 @@
         const healthPanelChartService = new HealthPanelChartService(
           inject(HTTP_CLIENT) as HttpClient,
         );
-        const data = await healthPanelChartService.getDataSet();
-        console.log(data);
-      },
-
-      async getProjects() {
         const projectService = new ProjectService(
           inject(HTTP_CLIENT) as HttpClient,
         );
+
+        const dateService = inject(DATE_SERVICE) as DateService;
+
+        const data = await healthPanelChartService.getDataSet();
+
+        this.chartDataSet = new ChartjsAdapter(dateService).formatToChart(data);
+      },
+
+      async getProjects() {
         this.projects = [
           new Project({
             id: 'd390ed7c-ccb0-463f-8dc9-ab88826348a4',
@@ -100,43 +110,8 @@
                 'Novembro',
                 'Dezembro',
               ],
-              // datasets: this.projects.map((it: HealthPanelChart) => it.format(chartJSFormatter))
-              datasets: [
-                {
-                  label: 'AL5 Bank',
-                  data: [84, 85, 88, 89],
-                  backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                  ],
-                  borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                  ],
-                  borderWidth: 3,
-                },
-                {
-                  label: 'Avenue',
-                  data: [75, 78, 88.65, 90],
-                  backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                  ],
-                  borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                  ],
-                  borderWidth: 3,
-                },
-              ],
+
+              datasets: this.chartDataSet,
             },
             options: {
               plugins: {

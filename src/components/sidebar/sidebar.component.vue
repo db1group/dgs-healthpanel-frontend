@@ -34,7 +34,7 @@
         @click="goToPage('ranking')"
       ></v-list-item>
       <v-list-item
-        v-if="false"
+        v-if="true"
         title="Painel de saúde"
         prepend-icon="mdi-chart-line"
         value="health-panel-bi"
@@ -54,13 +54,21 @@
         value="techlead"
         @click="goToPage('lead-engineer-list')"
       ></v-list-item>
-      <v-spacer></v-spacer>
-      <v-list-item
-        title="Download DB1 CLI"
-        prepend-icon="mdi-terminal"
-        @click="downloadCli"
-      ></v-list-item>
     </v-list>
+    <template v-slot:append>
+      <div class="pa-2 pb-5">
+        <v-btn  color="secondary" block @click="downloadCli">
+          <v-row align="center">
+            <v-col cols="10">
+              <div>Download DB1 CLI</div>
+            </v-col>
+            <v-col cols="2">
+              <v-icon end> mdi-download </v-icon>
+            </v-col>
+          </v-row>
+        </v-btn>
+      </div>
+    </template>
   </v-navigation-drawer>
 </template>
 

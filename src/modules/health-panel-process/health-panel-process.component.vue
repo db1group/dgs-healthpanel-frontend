@@ -33,6 +33,7 @@
             </v-col>
             <v-col cols="12">
               <v-textarea
+                v-model="theme.additionalData"
                 variant="outlined"
                 label="Links das documentações do tópico"
                 placeholder="Links das documentações do tópico"

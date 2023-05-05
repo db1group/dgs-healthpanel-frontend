@@ -7,7 +7,7 @@ export class HealthPanelProcess {
 
   public order: number;
 
-  public additionalData: number;
+  public additionalData: string;
 
   public columns: HealthPanelColumns[];
 
