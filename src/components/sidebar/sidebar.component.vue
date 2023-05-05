@@ -84,7 +84,7 @@
 
   function downloadCli() {
     window.open(
-      'https://github.com/db1group/dgs-cli/releases/download/v1.0.0/dgscli-1.0.0.zip',
+      ' https://github.com/db1group/dgs-cli/releases/download/v1.0.0/dgscli-1.0.0.zip',
       '_blank',
     );
   }
