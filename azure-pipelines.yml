@@ -6,9 +6,7 @@
 
 trigger:
   - main
-pool:
-  vmImage: ubuntu-latest
-  name: Azure Pipelines 4
+pool: fpp
 steps:
   - task: NodeTool@0
     env:
