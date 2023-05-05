@@ -10,6 +10,12 @@ pool:
   vmImage: ubuntu-latest
 steps:
   - task: NodeTool@0
+    env:
+      VITE_MICROSOFT_AD_CLIENT_ID: $(MICROSOFT_AD_CLIENT_ID)
+      VITE_MICROSOFT_AD_TENANT_ID: $(MICROSOFT_AD_TENANT_ID)
+      VITE_URL: $(URL)
+      VITE_BACKEND_URL: $(BACKEND_URL)
+
     inputs:
       versionSpec: '18.x'
     displayName: 'Install Node.js'
