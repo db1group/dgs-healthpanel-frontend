@@ -34,7 +34,7 @@
         @click="goToPage('ranking')"
       ></v-list-item>
       <v-list-item
-        v-if="true"
+        v-if="false"
         title="Painel de saúde"
         prepend-icon="mdi-chart-line"
         value="health-panel-bi"
@@ -57,7 +57,7 @@
     </v-list>
     <template v-slot:append>
       <div class="pa-2 pb-5">
-        <v-btn  color="secondary" block @click="downloadCli">
+        <v-btn color="secondary" block @click="downloadCli">
           <v-row align="center">
             <v-col cols="10">
               <div>Download DB1 CLI</div>
