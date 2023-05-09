@@ -107,6 +107,7 @@
       'alexandro.hervis',
       'bruno.rossmann',
       'debora.fabri',
+      'robson.cachoeira',
     ];
 
     return usersManagers.includes(store.usercode);
