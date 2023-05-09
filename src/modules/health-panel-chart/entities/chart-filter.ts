@@ -42,7 +42,7 @@ export class ChartFilter {
       startDate: startDate ? `01/01/${startDate}` : undefined,
       endDate: endDate ? `01/01/${endDate}` : undefined,
       projectIds: this.projectIds?.length ? this.projectIds : undefined,
-      costCenterName: this.costCenter?.length ? this.costCenter : undefined,
+      costCenterIds: this.costCenter?.length ? this.costCenter : undefined,
     };
   }
 }

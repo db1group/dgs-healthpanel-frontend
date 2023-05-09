@@ -29,11 +29,11 @@
                 <v-checkbox
                   density="compact"
                   v-for="costCenter in costCenters"
-                  :key="costCenter"
+                  :key="costCenter.id"
                   v-model="filter.costCenter"
                   hide-details
-                  :label="costCenter"
-                  :value="costCenter"
+                  :label="costCenter.name"
+                  :value="costCenter.id"
                 ></v-checkbox>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -125,7 +125,7 @@
       chartDataSet: { labels: [] } as any,
       dates: [] as string[],
       years: ['2022', '2023'],
-      costCenters: [] as string[],
+      costCenters: [] as { id: string; name: string }[],
       dateService: inject(DATE_SERVICE) as DateService,
       tabs: [
         {
@@ -161,18 +161,11 @@
             this.dateService.format(new Date(it), 'MMM - yyyy'),
           );
       },
-      getCostCenters(data: HealthScoreBackendDTO[] = []) {
-        return data
-          .reduce((acc: any[], value: HealthScoreBackendDTO) => {
-            const hasData = acc.findIndex(
-              (it: any) => it === value.costCenterName,
-            );
-            if (hasData >= 0) return acc;
-            acc.push(value.costCenterName);
-            return acc;
-          }, [])
-          .sort((a: string, b: string) => (a > b ? 1 : -1));
+
+      async getCostCenters() {
+        this.costCenters = await this.projectService.getAllCenterOfCosts();
       },
+
       async getDataSet() {
         const data = await this.healthPanelChartService.getDataSet(
           this.filter as ChartFilter,
@@ -180,7 +173,6 @@
         this.chartDataSet = { labels: [] };
         this.$nextTick(() => {
           this.dates = this.getDates(data);
-          this.costCenters = this.getCostCenters(data);
 
           this.chartDataSet = new ChartjsAdapter(
             this.dateService,
@@ -188,9 +180,12 @@
         });
       },
     },
-    created() {
+    async created() {
+      this.$loader.open();
       this.getAllProjects();
       this.getDataSet();
+      await this.getCostCenters();
+      this.$loader.close();
     },
   };
 </script>

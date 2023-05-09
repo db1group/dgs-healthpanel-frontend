@@ -1,4 +1,5 @@
 import { HttpClient } from '../../../infra/http/http';
+import { CostCenter } from '../entities/cost-center';
 import { Project } from '../entities/project';
 
 export class ProjectService {
@@ -7,6 +8,12 @@ export class ProjectService {
   getAllProjects(): Promise<Project[]> {
     return this.httpClient.get('/project').then(({ data }) => {
       return data.map((project: any) => new Project(project));
+    });
+  }
+
+  getAllCenterOfCosts(): Promise<CostCenter[]> {
+    return this.httpClient.get('/costcenter').then(({ data }) => {
+      return data.map((costCenter: any) => new CostCenter(costCenter));
     });
   }
 

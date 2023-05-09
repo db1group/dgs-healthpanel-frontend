@@ -14,13 +14,16 @@
             ></v-text-field>
           </v-col>
           <v-col cols="12" lg="4">
-            <v-text-field
+            <v-select
               variant="outlined"
+              :items="costCenters"
               :rules="[rules.required]"
               v-model="project.costCenter"
+              item-title="name"
+              item-value="id"
               label="Centro de custo"
               required
-            ></v-text-field>
+            />
           </v-col>
           <v-col cols="12" lg="4">
             <v-select
@@ -55,11 +58,13 @@
   import { ProjectService } from '../../services/project.service';
   import { LeadEngineer } from '../../../techlead/entities/lead-engineer';
   import rulesService from '../../../../infra/form-validation/rules.service';
+  import { CostCenter } from '../../entities/cost-center';
 
   export default {
     data() {
       return {
         project: new Project(),
+        costCenters: [] as CostCenter[],
         leadsService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
         projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
         leads: [] as LeadEngineer[],
@@ -82,6 +87,20 @@
           return;
         }
         this.create();
+      },
+      getCostCenters() {
+        this.projectService
+          .getAllCenterOfCosts()
+          .then((costCenters: CostCenter[]) => {
+            this.costCenters = costCenters;
+          })
+          .catch(() => {
+            this.$snackbar.open({
+              text: 'Erro ao buscar centros de custo',
+              color: 'danger',
+              buttonColor: 'white',
+            });
+          });
       },
       create() {
         this.projectService
@@ -145,6 +164,7 @@
         this.getProjectById(id);
       }
       this.getAllLeads();
+      this.getCostCenters();
     },
   };
 </script>

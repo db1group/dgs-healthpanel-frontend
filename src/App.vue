@@ -21,7 +21,7 @@
         ></v-app-bar-nav-icon>
 
         <v-toolbar-title>Painel de saúde 2.0 </v-toolbar-title>
-        <v-row justify="end" align="center">
+        <!-- <v-row justify="end" align="center">
           <v-col cols="6">
             <v-select
               disabled
@@ -39,7 +39,7 @@
               item-value="value"
             />
           </v-col>
-        </v-row>
+        </v-row> -->
       </v-toolbar>
 
       <section v-if="isAuthenticated">

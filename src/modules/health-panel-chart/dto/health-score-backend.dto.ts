@@ -12,4 +12,6 @@ export type HealthScoreBackendDTO = {
   projectName: string;
 
   costCenterName: string;
+
+  costCenterId: string;
 };

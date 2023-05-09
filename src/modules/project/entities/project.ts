@@ -31,8 +31,8 @@ export class Project {
     return {
       id: this.id,
       name: this.name,
-      costCenter: this.costCenter,
-      leadProject: this.leads.length
+      costCenter: { id: this.costCenter },
+      leadProjects: this.leads.length
         ? this.leads.map((it) => ({ LeadId: it }))
         : undefined,
     };
