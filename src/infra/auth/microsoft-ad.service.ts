@@ -16,7 +16,7 @@ export class MicrosoftAdService implements AuthAd {
       };
       const handleResponse = (response: any) => {
         if (response !== null) {
-          this.insertStore(response.accessToken, response.account?.name);
+          this.insertStore(response.accessToken, response.account);
           resolve(true);
           return;
         }
@@ -31,7 +31,7 @@ export class MicrosoftAdService implements AuthAd {
               account: currentAccounts[0],
             })
             .then((response: any) => {
-              this.insertStore(response.accessToken, response.account?.name);
+              this.insertStore(response.accessToken, response.account);
               resolve(true);
             })
             .catch((err) => {
@@ -44,9 +44,10 @@ export class MicrosoftAdService implements AuthAd {
     });
   }
 
-  private insertStore(token: string, username: string) {
+  private insertStore(token: string, account: any) {
     this.storeService.setToken(token);
-    this.storeService.setUsername(username);
+    this.storeService.setUsername(account.name);
+    this.storeService.setUserCode(account.username.split('@')[0]);
   }
 
   private getScopes() {

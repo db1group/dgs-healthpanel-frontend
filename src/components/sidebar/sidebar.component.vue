@@ -34,21 +34,21 @@
         @click="goToPage('ranking')"
       ></v-list-item>
       <v-list-item
-        v-if="false"
+        v-if="isManager"
         title="Painel de saúde"
         prepend-icon="mdi-chart-line"
         value="health-panel-bi"
         @click="goToPage('health-panel-bi')"
       ></v-list-item>
       <v-list-item
-        v-if="false"
+        v-if="isManager"
         title="Projetos"
         prepend-icon="mdi-domain"
         value="project"
         @click="goToPage('project-list')"
       ></v-list-item>
       <v-list-item
-        v-if="false"
+        v-if="isManager"
         title="Lead engineer"
         prepend-icon="mdi-account-group"
         value="techlead"
@@ -73,12 +73,15 @@
 </template>
 
 <script lang="ts" setup>
+  import { ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { authStore } from '../../store/auth-store';
+  import { onMounted } from 'vue';
 
   const emit = defineEmits(['input']);
   const store = authStore();
   const router = useRouter();
+  const isManager = ref(false);
 
   interface Props {
     drawer: boolean;
@@ -96,6 +99,22 @@
       '_blank',
     );
   }
+
+  function profileManager() {
+    const usersManagers = [
+      'nilson.junior',
+      'erick.lima',
+      'alexandro.hervis',
+      'bruno.rossmann',
+      'debora.fabri',
+    ];
+
+    return usersManagers.includes(store.usercode);
+  }
+
+  onMounted(() => {
+    isManager.value = profileManager();
+  });
 
   const { drawer } = defineProps<Props>();
 

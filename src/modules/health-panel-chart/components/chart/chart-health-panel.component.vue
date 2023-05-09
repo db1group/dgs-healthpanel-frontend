@@ -65,7 +65,6 @@
             scales: {},
           },
         });
-        console.log(data);
         data.draw();
       },
     },

@@ -4,6 +4,7 @@ export const authStore = defineStore('auth', {
   state: () => ({
     userToken: '',
     username: '',
+    usercode: '',
   }),
   getters: {
     token(): string {
@@ -16,6 +17,9 @@ export const authStore = defineStore('auth', {
     },
     setUsername(username: string) {
       this.username = username;
+    },
+    setUserCode(usercode: string) {
+      this.usercode = usercode;
     },
   },
 });
