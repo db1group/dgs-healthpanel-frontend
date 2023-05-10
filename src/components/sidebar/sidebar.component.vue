@@ -119,7 +119,7 @@
 
   const { drawer } = defineProps<Props>();
 
-  function close(data: boolean) {
+  function close() {
     emit('input', false);
   }
 </script>

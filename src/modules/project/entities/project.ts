@@ -1,18 +1,19 @@
 import { LeadEngineer } from '../../techlead/entities/lead-engineer';
+import { CostCenter } from './cost-center';
 
 export class Project {
   public id: string;
 
   public name: string;
 
-  public costCenter: string;
+  public costCenter: CostCenter;
 
   public leads: LeadEngineer[];
 
   constructor(data: any = {}) {
     this.id = data.id;
     this.name = data.name;
-    this.costCenter = data.costCenter;
+    this.costCenter = new CostCenter(data.costCenter);
     this.leads = data.leadProjects?.length
       ? this.getLeads(data.leadProjects)
       : [];
@@ -31,9 +32,9 @@ export class Project {
     return {
       id: this.id,
       name: this.name,
-      costCenter: { id: this.costCenter },
+      costCenter: { id: this.costCenter.id },
       leadProjects: this.leads.length
-        ? this.leads.map((it) => ({ LeadId: it }))
+        ? this.leads.map((it) => ({ LeadId: it.id }))
         : undefined,
     };
   }

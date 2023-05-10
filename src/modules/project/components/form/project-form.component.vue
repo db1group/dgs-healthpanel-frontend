@@ -17,6 +17,7 @@
             <v-select
               variant="outlined"
               :items="costCenters"
+              return-object
               :rules="[rules.required]"
               v-model="project.costCenter"
               item-title="name"
@@ -31,6 +32,7 @@
               :items="leads"
               variant="outlined"
               v-model="project.leads"
+              return-object
               label="Lead do projeto"
               required
               item-title="name"

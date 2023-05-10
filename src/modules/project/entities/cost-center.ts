@@ -4,7 +4,7 @@ export class CostCenter {
   public name: string;
 
   constructor(data: any = {}) {
-    this.id = data.id;
-    this.name = data.name;
+    this.id = data.id || '';
+    this.name = data.name || '';
   }
 }
