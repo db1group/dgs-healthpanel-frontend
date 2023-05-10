@@ -37,7 +37,7 @@
                 ></v-checkbox>
               </v-expansion-panel-text>
             </v-expansion-panel>
-            <v-expansion-panel title="Projetos">
+            <!-- <v-expansion-panel title="Projetos">
               <v-expansion-panel-text
                 style="max-height: 500px"
                 class="overflow-auto"
@@ -52,7 +52,7 @@
                   :value="project.id"
                 ></v-checkbox>
               </v-expansion-panel-text>
-            </v-expansion-panel>
+            </v-expansion-panel> -->
           </v-expansion-panels>
           <v-row class="mt-5">
             <v-col>
