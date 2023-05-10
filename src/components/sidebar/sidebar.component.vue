@@ -55,7 +55,7 @@
         @click="goToPage('lead-engineer-list')"
       ></v-list-item>
     </v-list>
-    <template v-slot:append>
+    <!-- <template v-slot:append>
       <div class="pa-2 pb-5">
         <v-btn color="secondary" block @click="downloadCli">
           <v-row align="center">
@@ -68,7 +68,7 @@
           </v-row>
         </v-btn>
       </div>
-    </template>
+    </template> -->
   </v-navigation-drawer>
 </template>
 

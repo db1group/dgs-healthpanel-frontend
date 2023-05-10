@@ -29,6 +29,7 @@ export class Project {
   }
 
   format() {
+    debugger;
     return {
       id: this.id,
       name: this.name,
