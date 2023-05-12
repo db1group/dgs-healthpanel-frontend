@@ -1,4 +1,4 @@
-export interface SnackbarInterface extends SnackbarContentInterface {
+export interface ISnackbar extends SnackbarContentInterface {
   open: (data: SnackbarContentInterface) => void;
   close: Function;
 }

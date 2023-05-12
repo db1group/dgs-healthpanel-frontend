@@ -14,7 +14,7 @@ import { DependencyInjection } from './infra/dependecy-injection/dependency-inje
 import { router } from './router/router';
 import { GlobalServices } from './infra/global-services/global-services';
 import { LoaderInterface } from './components/loader/services/loader.interface';
-import { SnackbarInterface } from './components/snackbar/interfaces/snackbar.interface';
+import { ISnackbar } from './components/snackbar/interfaces/snackbar.interface';
 import { ChartRegister } from './infra/chart/chart.register';
 
 const pinia = createPinia();
@@ -50,6 +50,6 @@ app.mount('#app');
 declare module 'vue' {
   interface ComponentCustomProperties {
     $loader: LoaderInterface;
-    $snackbar: SnackbarInterface;
+    $snackbar: ISnackbar;
   }
 }

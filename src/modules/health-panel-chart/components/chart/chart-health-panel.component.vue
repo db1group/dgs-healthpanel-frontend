@@ -50,6 +50,9 @@
             datasets: this.chartDataSet.dataset,
           },
           options: {
+            interaction: {
+              intersect: false,
+            },
             plugins: {
               title: {
                 display: true,
@@ -57,12 +60,16 @@
               tooltip: {
                 usePointStyle: true,
                 enabled: true,
-                mode: 'dataset',
+                mode: 'x',
               },
             },
             responsive: true,
 
-            scales: {},
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
           },
         });
         data.draw();

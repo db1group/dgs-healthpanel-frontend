@@ -1,9 +1,9 @@
 import {
-  SnackbarInterface,
+  ISnackbar,
   SnackbarContentInterface,
 } from '../interfaces/snackbar.interface';
 
-class SnackbarService implements SnackbarInterface {
+class SnackbarService implements ISnackbar {
   public text = '';
 
   public absolute = false;

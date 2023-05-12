@@ -14,7 +14,11 @@ export class DependencyInjection {
   async execute() {
     const store: AuthStore = authStore();
     const authService: AuthAd = new MicrosoftAdService(store);
-    const httpService: HttpClient = new AxiosAdapter(store);
+    const httpService: HttpClient = new AxiosAdapter(
+      store,
+      authService,
+      this.applicationVue.config.globalProperties.$snackbar,
+    );
     const dateService: DateService = new DateFnsAdapter();
 
     this.applicationVue.provide(HTTP_CLIENT, httpService);

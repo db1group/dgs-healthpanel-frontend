@@ -4,13 +4,14 @@ import { AuthStore } from '../../store/auth-store.interface';
 import { AuthAd } from './auth-ad';
 
 export class MicrosoftAdService implements AuthAd {
-  constructor(private readonly storeService: AuthStore) {}
+  private msalInstance: Msal.PublicClientApplication;
+
+  constructor(private readonly storeService: AuthStore) {
+    this.msalInstance = new Msal.PublicClientApplication(this.createConfig());
+  }
 
   connect(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const config = this.createConfig();
-      const msalInstance = new Msal.PublicClientApplication(config);
-
       const loginRequest = {
         scopes: this.getScopes(),
       };
@@ -21,11 +22,11 @@ export class MicrosoftAdService implements AuthAd {
           return;
         }
 
-        const currentAccounts = msalInstance.getAllAccounts();
+        const currentAccounts = this.msalInstance.getAllAccounts();
         if (currentAccounts.length === 0) {
-          msalInstance.loginRedirect(loginRequest);
+          this.msalInstance.loginRedirect(loginRequest);
         } else if (currentAccounts.length) {
-          return msalInstance
+          return this.msalInstance
             .acquireTokenSilent({
               scopes: this.getScopes(),
               account: currentAccounts[0],
@@ -40,8 +41,26 @@ export class MicrosoftAdService implements AuthAd {
         }
       };
 
-      msalInstance.handleRedirectPromise().then(handleResponse);
+      this.msalInstance.handleRedirectPromise().then(handleResponse);
     });
+  }
+
+  public async refreshToken(): Promise<string> {
+    const currentAccounts = this.msalInstance.getAllAccounts();
+    if (currentAccounts.length) {
+      try {
+        const response = await this.msalInstance.acquireTokenSilent({
+          scopes: this.getScopes(),
+          account: currentAccounts[0],
+        });
+        this.insertStore(response.accessToken, response.account);
+        return response.accessToken;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    console.error('Not find account to refresh token');
+    return '';
   }
 
   private insertStore(token: string, account: any) {
