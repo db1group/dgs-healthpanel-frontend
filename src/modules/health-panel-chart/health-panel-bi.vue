@@ -37,22 +37,6 @@
                 ></v-checkbox>
               </v-expansion-panel-text>
             </v-expansion-panel>
-            <!-- <v-expansion-panel title="Projetos">
-              <v-expansion-panel-text
-                style="max-height: 500px"
-                class="overflow-auto"
-              >
-                <v-checkbox
-                  density="compact"
-                  v-for="project in projects"
-                  :key="project.id"
-                  v-model="filter.projectIds"
-                  hide-details
-                  :label="project.name"
-                  :value="project.id"
-                ></v-checkbox>
-              </v-expansion-panel-text>
-            </v-expansion-panel> -->
           </v-expansion-panels>
           <v-row class="mt-5">
             <v-col>
@@ -149,7 +133,11 @@
       getDates(data: HealthScoreBackendDTO[] = []) {
         return data
           .reduce((acc: any[], value: HealthScoreBackendDTO) => {
-            const hasData = acc.findIndex((it: any) => it === value.date);
+            const hasData = acc.findIndex(
+              (it: any) =>
+                this.dateService.format(new Date(it), 'MMM - yyyy') ===
+                this.dateService.format(new Date(value.date), 'MMM - yyyy'),
+            );
             if (hasData >= 0) return acc;
             acc.push(value.date);
             return acc;
