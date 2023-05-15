@@ -3,6 +3,8 @@ export class LeadEngineer {
 
   public name: string;
 
+  public email: string;
+
   public inTraining: boolean;
 
   public projects: string[];
@@ -10,6 +12,7 @@ export class LeadEngineer {
   constructor(data: any = {}) {
     this.id = data.id;
     this.name = data.name;
+    this.email = data.email;
     this.inTraining = data.inTraining === true;
     this.projects = data.leadProjects?.length
       ? this.getProjectsId(data.leadProjects)
@@ -31,6 +34,7 @@ export class LeadEngineer {
     return {
       id: this.id,
       name: this.name,
+      email: this.email,
       inTraining: this.inTraining,
       leadProjects: this.projects.length
         ? this.projects.map((project) => {

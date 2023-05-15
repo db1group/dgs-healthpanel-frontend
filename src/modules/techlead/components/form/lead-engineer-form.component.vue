@@ -13,6 +13,14 @@
             ></v-text-field>
           </v-col>
           <v-col cols="12" lg="4">
+            <v-text-field
+              variant="outlined"
+              v-model="lead.email"
+              :rules="[rules.required]"
+              label="Email do lead"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" lg="4">
             <v-select
               :multiple="true"
               :items="projects"
