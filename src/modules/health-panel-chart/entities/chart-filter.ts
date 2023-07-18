@@ -1,14 +1,11 @@
-import { DateService } from '../../../infra/date-service/date-service';
+import { BackendEvaluationFilter, EvaluationFilter } from './filter';
 
-export class ChartFilter {
-  public projectIds?: string[];
-
+export class ChartFilter implements EvaluationFilter {
   public costCenter?: string[];
 
   public years: string[];
 
   constructor() {
-    this.projectIds = [];
     this.costCenter = [];
     this.years = [];
   }
@@ -34,14 +31,13 @@ export class ChartFilter {
     }
   }
 
-  format() {
+  format(): BackendEvaluationFilter {
     const startDate = this.getFirstYear();
     const endDate = this.getLastYear();
 
     return {
       startDate: startDate ? `01/01/${startDate}` : undefined,
       endDate: endDate ? `01/01/${endDate}` : undefined,
-      projectIds: this.projectIds?.length ? this.projectIds : undefined,
       costCenterIds: this.costCenter?.length ? this.costCenter : undefined,
     };
   }

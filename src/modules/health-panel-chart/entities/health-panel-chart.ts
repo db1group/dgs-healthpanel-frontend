@@ -1,6 +1,3 @@
-import { ChartAdapter } from './chart-adapter';
-import { ChartJSOutput } from './chartjs-adapter';
-
 export class HealthPanelChart {
   public date: string;
 

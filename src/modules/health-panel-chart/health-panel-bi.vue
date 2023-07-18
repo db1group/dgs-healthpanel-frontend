@@ -3,7 +3,7 @@
     <v-card-title> Resultados </v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="12" lg="3">
+        <v-col cols="12" lg="3" v-if="showSidebar">
           <v-expansion-panels :max="500">
             <v-expansion-panel title="Data">
               <v-expansion-panel-text
@@ -14,7 +14,7 @@
                   density="compact"
                   v-for="date in years"
                   :key="date"
-                  v-model="filter.years"
+                  v-model="chartFilter.years"
                   hide-details
                   :label="date"
                   :value="date"
@@ -30,7 +30,7 @@
                   density="compact"
                   v-for="costCenter in costCenters"
                   :key="costCenter.id"
-                  v-model="filter.costCenter"
+                  v-model="chartFilter.costCenter"
                   hide-details
                   :label="costCenter.name"
                   :value="costCenter.id"
@@ -38,15 +38,15 @@
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
-          <v-row class="mt-5">
+          <v-row>
             <v-col>
-              <v-btn @click="getDataSet" block color="primary">
+              <v-btn @click="getData" block color="primary">
                 Aplicar filtros
               </v-btn>
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" lg="9" v-if="chartDataSet.labels.length">
+        <v-col cols="12" :lg="showSidebar ? 9 : 12" v-if="chartDataSet.labels.length">
           <v-tabs v-model="tab" fixed-tabs color="primary">
             <v-tab
               color="primary"
@@ -68,7 +68,9 @@
                   <component
                     :chart-data-set="chartDataSet"
                     :dates="dates"
+                    :evaluations-analytics="evaluationsAnalytics"
                     :is="item.component"
+                    @filter-by-month="getEvaluationsAnalytics"
                   />
                 </v-col>
               </v-row>
@@ -86,9 +88,9 @@
 
   import ChartHealthPanel from './components/chart/chart-health-panel.component.vue';
   import ReportAnalyticComponent from './components/analytics/report-analytic.component.vue';
-  import { markRaw } from 'vue';
+  import { markRaw, inject } from 'vue';
   import { ProjectService } from '../project/services/project.service';
-  import { inject } from 'vue';
+
   import { HTTP_CLIENT, HttpClient } from '../../infra/http/http';
   import {
     DATE_SERVICE,
@@ -97,11 +99,14 @@
   import { HealthPanelChartService } from './services/health-panel-chart.service';
   import { ChartjsAdapter } from './entities/chartjs-adapter';
   import { HealthScoreBackendDTO } from './dto/health-score-backend.dto';
+  import { HealthPanelAnalytics } from './entities/health-panel-analytics';
+  import { AnalyticsFilter } from './entities/analytics-filter';
 
   export default {
     data: () => ({
       projects: [] as Project[],
-      filter: new ChartFilter(),
+      evaluationsAnalytics: [] as HealthPanelAnalytics[],
+      chartFilter: new ChartFilter(),
       projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
       healthPanelChartService: new HealthPanelChartService(
         inject(HTTP_CLIENT) as HttpClient,
@@ -153,10 +158,21 @@
       async getCostCenters() {
         this.costCenters = await this.projectService.getAllCenterOfCosts();
       },
-
+      async getEvaluationsAnalytics(
+        currentMonth: number = new Date().getMonth(),
+      ) {
+        const analyticsFilter = new AnalyticsFilter(currentMonth, this.dateService);
+        this.evaluationsAnalytics =
+          await this.healthPanelChartService.getAnalyticsEvaluation(
+            analyticsFilter,
+          );
+      },
+      getData() {
+        this.getDataSet();
+      },
       async getDataSet() {
         const data = await this.healthPanelChartService.getDataSet(
-          this.filter as ChartFilter,
+          this.chartFilter as ChartFilter,
         );
         this.chartDataSet = { labels: [] };
         this.$nextTick(() => {
@@ -167,13 +183,25 @@
           ).formatToChart(data, this.dates);
         });
       },
+      async getEvaluations() {
+        return Promise.all([
+          this.getCostCenters(),
+          this.getAllProjects(),
+          this.getData(),
+        ]);
+      },
     },
+    computed: {
+      showSidebar() {
+        return this.tab === 0;
+      },
+    },
+
     async created() {
       this.$loader.open();
-      this.getAllProjects();
-      this.getDataSet();
-      await this.getCostCenters();
-      this.$loader.close();
+      this.getEvaluations().finally(() => {
+        this.$loader.close();
+      });
     },
   };
 </script>

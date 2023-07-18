@@ -1,4 +1,3 @@
-import { cs } from 'date-fns/locale';
 import { DateService } from '../../../infra/date-service/date-service';
 import { ChartAdapter } from './chart-adapter';
 import { HealthScoreBackendDTO } from '../dto/health-score-backend.dto';

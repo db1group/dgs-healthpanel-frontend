@@ -33,7 +33,6 @@ export class AxiosAdapter implements HttpClient {
       (axiosResponse: AxiosResponse) => axiosResponse,
       (axiosError: AxiosError): any => {
         const request = axiosError.config;
-        const token = this.storeService.token;
         if (axiosError.response && axiosError.response.status === 401) {
           this,
             this.authService
@@ -49,6 +48,21 @@ export class AxiosAdapter implements HttpClient {
                 });
                 throw new Error(`Não foi possivel setar o novo token ${err}`);
               });
+        }
+
+        return Promise.reject(axiosError);
+      },
+    );
+    this.http.interceptors.response.use(
+      (axiosResponse: AxiosResponse) => axiosResponse,
+      (axiosError: AxiosError): any => {
+        const request = axiosError.config;
+        if (axiosError.response && axiosError.response.status === 401) {
+          this,
+            this.authService.refreshToken().then((newToken: string) => {
+              this.storeService.setToken(newToken);
+              return this.http(request);
+            });
         }
 
         return Promise.reject(axiosError);
