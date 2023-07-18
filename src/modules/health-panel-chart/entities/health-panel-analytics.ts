@@ -25,7 +25,9 @@ export class HealthPanelAnalytics {
     this.date = data?.date ?? '';
     this.user = data?.user ?? '';
     this.pillarScores = data?.pillarScores?.length
-      ? data.pillarScores.map((pillarScore) => new PillarScores(pillarScore))
+      ? data.pillarScores
+          .map((pillarScore) => new PillarScores(pillarScore))
+          .sort((a, b) => (a.name >= b.name ? 1 : -1))
       : [];
     this.healthScore = new HealthScore(data?.healthScore ?? 0);
   }
