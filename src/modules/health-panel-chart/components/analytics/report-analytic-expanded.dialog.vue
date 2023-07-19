@@ -38,9 +38,9 @@
           </v-row>
           <v-row v-for="item in evaluations">
             <v-col cols="2">
-              <v-card-title class="text-center">{{
-                item.projectName
-              }}</v-card-title>
+              <v-card-title class="text-center">
+                {{ item.projectName }}
+              </v-card-title>
             </v-col>
             <v-col cols="3">
               <v-row no-gutters>
@@ -49,9 +49,7 @@
                     <v-col>
                       <default-card
                         :background-color="
-                          item.metricsHealthScore.isHealthy
-                            ? 'success'
-                            : 'danger'
+                          getColorHealth(item.metricsHealthScore)
                         "
                         text-center
                         title="Métricas"
@@ -61,9 +59,7 @@
                     <v-col>
                       <default-card
                         :background-color="
-                          item.processHealthScore.isHealthy
-                            ? 'success'
-                            : 'danger'
+                          getColorHealth(item.processHealthScore)
                         "
                         text-center
                         title="Processos"
@@ -72,9 +68,7 @@
                     </v-col>
                     <v-col>
                       <default-card
-                        :background-color="
-                          item.healthScore.isHealthy ? 'success' : 'danger'
-                        "
+                        :background-color="getColorHealth(item.healthScore)"
                         text-center
                         title="HealthScore"
                         :value="item.healthScore.score"
@@ -89,12 +83,10 @@
                 <v-row justify="space-between" v-if="item.pillars.length">
                   <v-col cols="2" v-for="pillar in item.pillars">
                     <default-card
-                      :background-color="
-                        pillar.isHealthy ? 'success' : 'danger'
-                      "
+                      :background-color="getColorHealth(pillar)"
                       text-center
                       :title="pillar.name"
-                      :value="pillar.score"
+                      :value="pillar.getScoreInPercentage"
                     />
                   </v-col>
                 </v-row>
@@ -133,6 +125,19 @@
     methods: {
       close() {
         this.$emit('update:modelValue', false);
+      },
+
+      getColorHealth(healthScoreData: {
+        isHealthy: boolean;
+        isAlert: boolean;
+      }) {
+        if (healthScoreData.isHealthy) {
+          return 'success';
+        }
+        if (healthScoreData.isAlert) {
+          return 'warning';
+        }
+        return 'danger';
       },
     },
     computed: {

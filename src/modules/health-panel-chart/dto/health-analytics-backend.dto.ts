@@ -13,4 +13,6 @@ export type IPillarScores = {
   name: string;
   score: number;
   isHealthy: boolean;
+  isAlert: boolean;
+  getScoreInPercentage: string;
 };

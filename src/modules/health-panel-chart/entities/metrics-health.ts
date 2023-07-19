@@ -6,4 +6,8 @@ export class MetricsHealth {
   get isHealthy() {
     return this.score >= 80;
   }
+
+  get isAlert() {
+    return this.score >= 60 && this.score < 80;
+  }
 }

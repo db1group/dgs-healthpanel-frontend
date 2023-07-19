@@ -14,7 +14,11 @@
             >
           </v-col>
           <v-col cols="12">
-            <v-radio-group v-model="selectedMonth" inline @change="filterByMonth">
+            <v-radio-group
+              v-model="selectedMonth"
+              inline
+              @change="filterByMonth"
+            >
               <v-radio
                 class="ml-2"
                 color="primary"
@@ -43,12 +47,6 @@
                   <v-row>
                     <v-col cols="12" lg="3">
                       <default-card
-                        title="Lead do projeto"
-                        :value="evaluation.user"
-                      />
-                    </v-col>
-                    <v-col cols="12" lg="3">
-                      <default-card
                         title="Nota em processos"
                         :value="evaluation.processHealthScore.score"
                       />
@@ -62,7 +60,7 @@
                     <v-col cols="12" lg="3">
                       <default-card
                         title="HealthScore"
-                        :value="evaluation.healthScore"
+                        :value="evaluation.healthScore.score"
                       />
                     </v-col>
                   </v-row>

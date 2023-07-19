@@ -36,6 +36,10 @@ export class HealthPanelAnalytics {
     return this.healthScore.isHealthy;
   }
 
+  get isAlert(): boolean {
+    return this.healthScore.isAlert;
+  }
+
   get healthStatusDescription(): string {
     return this.isHealthy ? 'Passed' : 'Failed';
   }

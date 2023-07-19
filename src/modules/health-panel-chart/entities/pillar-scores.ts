@@ -1,4 +1,8 @@
 import { IPillarScores } from '../dto/health-analytics-backend.dto';
+import {
+  PillarAlertRanges,
+  PillarsHealthRanges,
+} from './pillars-health-ranges.enum';
 
 export class PillarScores implements IPillarScores {
   name: string;
@@ -9,14 +13,23 @@ export class PillarScores implements IPillarScores {
     this.score = data?.score ?? 0;
   }
 
+  get getScoreInPercentage(): string {
+    const healthyRanges: any = PillarsHealthRanges;
+    const currentPillarName = this.name as any;
+    const healtyRange = healthyRanges[currentPillarName];
+    const percentage = Number((this.score / healtyRange) * 100).toFixed(0);
+    return `${percentage}%`;
+  }
+
+  get isAlert(): boolean {
+    const alertRanges: any = PillarAlertRanges;
+    const currentPillarName = this.name as any;
+    const healtyRange = alertRanges[currentPillarName];
+    return this.score >= healtyRange;
+  }
+
   get isHealthy(): boolean {
-    const healthyRanges: any = {
-      'Gestão de testes': 30,
-      'Gestão de Build & Release': 20,
-      'Monitoramento de Aplicações': 10,
-      'Qualidade do Código': 5,
-      'Infraestrutura como Código': 30,
-    };
+    const healthyRanges: any = PillarsHealthRanges;
     const currentPillarName = this.name as any;
     const healtyRange = healthyRanges[currentPillarName];
     return this.score >= healtyRange;
