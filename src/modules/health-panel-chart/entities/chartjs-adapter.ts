@@ -42,7 +42,6 @@ export class ChartjsAdapter implements ChartAdapter<ChartJSOutput> {
             );
           },
         );
-        console.log(projectDataSorted[hasData]);
         if (hasData >= 0) return projectDataSorted[hasData].healthScore;
         return undefined;
       });
