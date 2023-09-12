@@ -58,7 +58,6 @@ export default {
 
     async getAllLeads() {
       this.leads = await this.leadService.getAllLeads();
-      console.log(this.leads);
     },
   },
   created() {
