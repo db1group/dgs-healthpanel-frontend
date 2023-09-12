@@ -39,6 +39,7 @@ export default {
       leadService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
       headers: [
         { title: 'Lead', align: 'start', key: 'name' },
+        { title: 'Email', align: 'start', key: 'email' },
         { title: 'Ações', align: 'start', key: 'actions', width: '10%' },
       ],
       leads: [] as LeadEngineer[],
@@ -57,6 +58,7 @@ export default {
 
     async getAllLeads() {
       this.leads = await this.leadService.getAllLeads();
+      console.log(this.leads);
     },
   },
   created() {
