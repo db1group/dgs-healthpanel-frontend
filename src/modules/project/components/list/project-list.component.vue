@@ -42,16 +42,16 @@ export default {
           sortable: false,
           key: 'name',
         },
-        { 
-          title: 'Leads', 
-          align: 'start', 
-          key: 'leadNames' 
+        {
+          title: 'Leads',
+          align: 'start',
+          key: 'leadNames'
         },
-        { 
-          title: 'Ações', 
-          align: 'start', 
-          key: 'actions', 
-          width: '10%' 
+        {
+          title: 'Ações',
+          align: 'start',
+          key: 'actions',
+          width: '10%'
         },
       ],
       projects: [] as Project[],
@@ -67,7 +67,6 @@ export default {
 
     async getAllProjects() {
       this.projects = await this.projectService.getAllProjects();
-      console.log(this.projects);
     },
   },
   created() {
