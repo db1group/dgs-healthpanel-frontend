@@ -102,9 +102,11 @@
             });
             this.$router.push({ name: 'lead-engineer-list' });
           })
-          .catch(() => {
+          .catch((e) => {
             this.$snackbar.open({
-              text: 'Erro ao cadastrar lead',
+              text: e.response.status === 409 ?
+                    'Nome ou email do lead ja cadastrado' : 
+                    'Erro ao cadastrar lead',
               color: 'danger',
               buttonColor: 'white',
             });
