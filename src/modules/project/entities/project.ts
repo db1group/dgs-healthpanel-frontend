@@ -9,7 +9,6 @@ export class Project {
   public costCenter: CostCenter;
 
   public leads: LeadEngineer[];
-  public leadNames: string;
 
   constructor(data: any = {}) {
     this.id = data.id;
@@ -18,7 +17,6 @@ export class Project {
     this.leads = data.leadProjects?.length
       ? this.getLeads(data.leadProjects)
       : [];
-    this.leadNames = this.getLeadsNames(this.leads);
   }
 
   private getLeads(leadProjects: any): LeadEngineer[] {
@@ -30,15 +28,14 @@ export class Project {
       .filter((it: LeadEngineer) => it);
   }
 
-  private getLeadsNames(leadEngineer: LeadEngineer[]): string {
-    if (!leadEngineer || !leadEngineer.length) {
+  get leadsNames(): string {
+    if (!this.leads || !this.leads.length) {
       return '';
     }
 
-    let names = leadEngineer
-    .map((it: LeadEngineer) => it.name);
-
-    return names.join(', ');
+    return this.leads
+      .map((it: LeadEngineer) => it.name)
+      .join(', ');
   }
 
   format() {

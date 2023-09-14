@@ -45,7 +45,7 @@ export default {
         {
           title: 'Leads',
           align: 'start',
-          key: 'leadNames'
+          key: 'leadsNames'
         },
         {
           title: 'Ações',
