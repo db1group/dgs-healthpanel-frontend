@@ -28,6 +28,16 @@ export class Project {
       .filter((it: LeadEngineer) => it);
   }
 
+  get leadsNames(): string {
+    if (!this.leads || !this.leads.length) {
+      return '';
+    }
+
+    return this.leads
+      .map((it: LeadEngineer) => it.name)
+      .join(', ');
+  }
+
   format() {
     return {
       id: this.id,

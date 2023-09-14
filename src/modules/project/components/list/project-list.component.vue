@@ -42,8 +42,17 @@ export default {
           sortable: false,
           key: 'name',
         },
-        { title: 'Lead', align: 'start', key: 'lead' },
-        { title: 'Ações', align: 'start', key: 'actions', width: '10%' },
+        {
+          title: 'Leads',
+          align: 'start',
+          key: 'leadsNames'
+        },
+        {
+          title: 'Ações',
+          align: 'start',
+          key: 'actions',
+          width: '10%'
+        },
       ],
       projects: [] as Project[],
     };
