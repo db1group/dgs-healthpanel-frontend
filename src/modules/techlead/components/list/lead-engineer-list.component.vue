@@ -43,6 +43,7 @@ export default {
       headers: [
         { title: 'Lead', align: 'start', key: 'name' },
         { title: 'Em Capacitação', align: 'start', key: 'inTraining' },
+        { title: 'Email', align: 'start', key: 'email' },
         { title: 'Ações', align: 'start', key: 'actions', width: '10%' },
       ],
       leads: [] as LeadEngineer[],
