@@ -128,7 +128,7 @@
             this.$snackbar.open({
               text: e.response.status === 409 ?
                     'Nome ou email do lead ja cadastrado' : 
-                    'Erro ao cadastrar lead',
+                    'Erro ao editar lead',
               color: 'danger',
               buttonColor: 'white',
             });
