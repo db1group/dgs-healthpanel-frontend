@@ -17,7 +17,7 @@
         class="elevation-1"
       >
         <template v-slot:item.inTraining="{ item }">
-          <v-checkbox v-model="item.columns.inTraining" disabled/>
+          {{item.columns.inTraining ? 'Sim' : 'Não'}}
         </template>
         <template v-slot:item.actions="{ item }">
           <v-btn @click="editItem(item.raw)" icon>
@@ -42,7 +42,7 @@ export default {
       leadService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
       headers: [
         { title: 'Lead', align: 'start', key: 'name' },
-        { title: 'Em Capacitação', align: 'start', key: 'inTraining' },
+        { title: 'Em Capacitação?', align: 'start', key: 'inTraining' },
         { title: 'Email', align: 'start', key: 'email' },
         { title: 'Ações', align: 'start', key: 'actions', width: '10%' },
       ],
