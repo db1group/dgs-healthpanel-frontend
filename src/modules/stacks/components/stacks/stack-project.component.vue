@@ -14,7 +14,7 @@
               <v-radio
                 class="ml-2"
                 color="primary"
-                v-for="(item, index) in projects"
+                v-for="(item, index) in projectsNames"
                 :key="index"
                 :label="item.name"
                 :value="index"
@@ -76,6 +76,7 @@ export default {
       selectedProject: 0,
       stacks: [] as Stack[],
       projects: [] as Project[],
+      projectsNames: [] as Project[]
     };
   },
   methods: {
@@ -87,8 +88,10 @@ export default {
     },
     async getAllProjects() {
       const allProject = await this.projectService.getAllProjects()
-
+      console.log(this.projectsNames);
+      
       this.projects = allProject
+      this.projectsNames = allProject
       allProject.map((item, index) => {
         this.selectedProject = index
       })
