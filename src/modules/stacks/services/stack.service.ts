@@ -11,8 +11,10 @@ export class StackService {
   }
 
   getLanguageByProjectId(id: string): Promise<Stack> {
-    return this.httpClient.get(`stack/projects?projectId=${id}`).then(({ data }) => {
-      return new Stack({});
+    return this.httpClient.get(`stack/projects?projectId=${id}`).then(({ data }) => {      
+      console.log(data);
+      
+      return data[0].stacks;
     });
   }
 }

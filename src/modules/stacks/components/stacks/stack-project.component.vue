@@ -1,22 +1,14 @@
 <template>
   <div class="stack">
-    <stackProject-expanded-dialog
-      v-model="showDialogAnalytic"
-      :evaluationsAnalytics="evaluationsAnalytics"
-    />
     <v-card>
-      <v-card-title> Relatório analítico </v-card-title>
+      <v-card-title> Relatório de stacks utilizadas </v-card-title>
       <v-card-text>
         <v-row justify="end">
-          <v-col cols="12" lg="3" class="text-right">
-            <v-btn color="primary" @click="openDialog"
-              >Relatório completo</v-btn
-            >
-          </v-col>
           <v-col cols="12">
             <v-radio-group
               v-model="selectedProject"
               inline
+              @change="filterProjectById(selectedProject)"
             >
               <v-radio
                 class="ml-2"
@@ -31,26 +23,20 @@
         </v-row>
 
         <v-row>
-          <v-col v-for="proj in projects" cols="12">
+          <v-col v-for="(proj, index) in projects" cols="12">
             <v-expansion-panels>
               <v-expansion-panel>
-                <v-expansion-panel-title>
-                  {{ proj.name }}
+                <v-expansion-panel-title @click="filterProjectById(index)">
+                  {{ proj.name, index }}
                   <v-spacer></v-spacer>
                 </v-expansion-panel-title>
 
                 <v-expansion-panel-text elevation="0">
-                  <v-row>
-                    <v-col cols="12" lg="3">
+                  <v-row >
+                    <v-col cols="3" lg="3" v-for="(item) in stacks">
                       <default-card
-                        title="Nota em métricas"
-                        :value="proj.name"
-                      />
-                    </v-col>
-                    <v-col cols="12" lg="3">
-                      <default-card
-                        title="HealthScore"
-                        :value="proj.leads"
+                        title="Stack utilizada"
+                        :value="item.stackName"
                       />
                     </v-col>
                   </v-row>
@@ -68,7 +54,6 @@
 import { Stack } from '../../entities/stack';
 import DefaultCard from '../../../../components/default-card/default-card.component.vue';
 import { Project } from '../../../project/entities/project';
-import StackProjectExpandedDialog from './stack-project-expanded.dialog.vue';
 import { StackService } from '../../services/stack.service'; 
 import { inject } from 'vue';
 import { ProjectService } from '../../../project/services/project.service';
@@ -77,7 +62,6 @@ import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
 export default {
   components: {
     DefaultCard,
-    StackProjectExpandedDialog,
   },
   props: {
     evaluationsAnalytics: {
@@ -91,25 +75,29 @@ export default {
       stackService: new StackService(inject(HTTP_CLIENT) as HttpClient),
       projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
       showDialogAnalytic: false,
-      selectedProject: undefined,
+      selectedProject: 0,
       stacks: [] as Stack[],
-      projects: [] as Project[]
+      projects: [] as Project[],
     };
   },
   methods: {
     openDialog() {
       this.showDialogAnalytic = true;
     },
-    getProjectName() {
-      ;
-    },
-    async getAllLanguage() {
-      this.stacks = await this.stackService.getAllLanguages()
-      console.log(this.stacks);
+    async filterProjectById(id:number) {
+      const specificProjectId = this.projects.find((project, index) => index === id)
+      const response = await this.stackService.getLanguageByProjectId(specificProjectId!.id)
+      console.log(response);
+      this.stacks = response
     },
     async getAllProjects() {
-      this.projects = await this.projectService.getAllProjects()
-      console.log(this.projects);
+      const allProject = await this.projectService.getAllProjects()
+
+      this.projects = allProject
+      allProject.map((item, index) => {
+        this.selectedProject = index
+      })
+      
     }
   },
   created() {
