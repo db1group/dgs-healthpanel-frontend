@@ -58,8 +58,8 @@
         v-if="isManager"
         title="Stacks"
         prepend-icon="mdi-access-point"
-        value="techlead"
-        @click="goToPage('lead-engineer-list')"
+        value="stacks"
+        @click="goToPage('stacks-projects-list')"
       ></v-list-item>
     </v-list>
     <template v-slot:append>
