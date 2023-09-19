@@ -6,7 +6,7 @@ export class StackService {
 
   getAllProjects(): Promise<Stack[]> {
     return this.httpClient.get('stack/all-languages').then(({ data }) => {
-      return data.map((stack: any) => new Stack(data));
+      return data.map((data: any) => new Stack(data));
     });
   }
 
