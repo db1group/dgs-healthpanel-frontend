@@ -3,6 +3,7 @@
     <v-card>
       <v-card-title> Relatório de stacks utilizadas </v-card-title>
       <v-card-text>
+        <v-text>Selecione o projeto para filtrar, caso queira.</v-text>
         <v-row justify="end">
           <v-col cols="12">
             <v-radio-group
@@ -27,10 +28,13 @@
             <v-expansion-panels>
               <v-expansion-panel>
                 <v-expansion-panel-title @click="filterProjectById(index)">
-                  {{ proj.name, index }}
+                  {{ proj.name }}
                   <v-spacer></v-spacer>
+                  <v-btn :color="'primary'">
+                    TECH RADAR
+                  </v-btn>
+                  
                 </v-expansion-panel-title>
-
                 <v-expansion-panel-text elevation="0">
                   <v-row >
                     <v-col cols="3" lg="3" v-for="(item) in stacks">
@@ -63,13 +67,7 @@ export default {
   components: {
     DefaultCard,
   },
-  props: {
-    evaluationsAnalytics: {
-      type: Array as () => Project[],
-      required: true,
-      default: () => [],
-    },
-  },
+  
   data() {
     return {
       stackService: new StackService(inject(HTTP_CLIENT) as HttpClient),
@@ -81,9 +79,6 @@ export default {
     };
   },
   methods: {
-    openDialog() {
-      this.showDialogAnalytic = true;
-    },
     async filterProjectById(id:number) {
       const specificProjectId = this.projects.find((project, index) => index === id)
       const response = await this.stackService.getLanguageByProjectId(specificProjectId!.id)
@@ -97,7 +92,6 @@ export default {
       allProject.map((item, index) => {
         this.selectedProject = index
       })
-      
     }
   },
   created() {
