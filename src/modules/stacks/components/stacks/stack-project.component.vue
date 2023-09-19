@@ -15,52 +15,42 @@
           </v-col>
           <v-col cols="12">
             <v-radio-group
-              v-model="selectedMonth"
+              v-model="selectedProject"
               inline
-              @change="filterByMonth"
             >
               <v-radio
                 class="ml-2"
                 color="primary"
-                v-for="(item, index) in months"
+                v-for="(item, index) in projects"
                 :key="index"
-                :label="item"
+                :label="item.name"
                 :value="index"
               ></v-radio>
             </v-radio-group>
           </v-col>
         </v-row>
+
         <v-row>
-          <v-col v-for="evaluation in evaluationsAnalytics" cols="12">
+          <v-col v-for="proj in projects" cols="12">
             <v-expansion-panels>
               <v-expansion-panel>
                 <v-expansion-panel-title>
-                  {{ evaluation }}
+                  {{ proj.name }}
                   <v-spacer></v-spacer>
-
-                  <v-chip :color="evaluation ? 'success' : 'danger'">
-                    {{ "evaluation" }}
-                  </v-chip>
                 </v-expansion-panel-title>
 
                 <v-expansion-panel-text elevation="0">
                   <v-row>
                     <v-col cols="12" lg="3">
                       <default-card
-                        title="Nota em processos"
-                        :value="evaluation"
-                      />
-                    </v-col>
-                    <v-col cols="12" lg="3">
-                      <default-card
                         title="Nota em métricas"
-                        :value="evaluation.stackName"
+                        :value="proj.name"
                       />
                     </v-col>
                     <v-col cols="12" lg="3">
                       <default-card
                         title="HealthScore"
-                        :value="evaluation.stackId"
+                        :value="proj.leads"
                       />
                     </v-col>
                   </v-row>
@@ -75,62 +65,55 @@
 </template>
 
 <script lang="ts">
-  import { Stack } from '../../entities/stack';
-  import DefaultCard from '../../../../components/default-card/default-card.component.vue';
-  import StackProjectExpandedDialog from './stack-project-expanded.dialog.vue';
-  import { StackService } from '../../services/stack.service'; 
+import { Stack } from '../../entities/stack';
+import DefaultCard from '../../../../components/default-card/default-card.component.vue';
+import { Project } from '../../../project/entities/project';
+import StackProjectExpandedDialog from './stack-project-expanded.dialog.vue';
+import { StackService } from '../../services/stack.service'; 
 import { inject } from 'vue';
+import { ProjectService } from '../../../project/services/project.service';
 import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
 
-  export default {
-    components: {
-      DefaultCard,
-      StackProjectExpandedDialog,
+export default {
+  components: {
+    DefaultCard,
+    StackProjectExpandedDialog,
+  },
+  props: {
+    evaluationsAnalytics: {
+      type: Array as () => Project[],
+      required: true,
+      default: () => [],
     },
-    props: {
-      evaluationsAnalytics: {
-        type: Array as () => Stack[],
-        required: true,
-        default: () => [],
-      },
+  },
+  data() {
+    return {
+      stackService: new StackService(inject(HTTP_CLIENT) as HttpClient),
+      projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
+      showDialogAnalytic: false,
+      selectedProject: undefined,
+      stacks: [] as Stack[],
+      projects: [] as Project[]
+    };
+  },
+  methods: {
+    openDialog() {
+      this.showDialogAnalytic = true;
     },
-    data() {
-      return {
-        stackService: new StackService(inject(HTTP_CLIENT) as HttpClient),
-        showDialogAnalytic: false,
-        selectedMonth: new Date().getMonth(),
-        months: [
-          'Janeiro',
-          'Fevereiro',
-          'Março',
-          'Abril',
-          'Maio',
-          'Junho',
-          'Julho',
-          'Agosto',
-          'Setembro',
-          'Outubro',
-          'Novembro',
-          'Dezembro',
-        ],
-        stacks: {}
-      };
+    getProjectName() {
+      ;
     },
-    methods: {
-      openDialog() {
-        this.showDialogAnalytic = true;
-      },
-      filterByMonth() {
-        this.$emit('filter-by-month', this.selectedMonth);
-      },
-      async getAllProjects() {
-        this.stacks = await this.stackService.getAllProjects()
-        console.log(this.stacks);
-        
-      },
+    async getAllLanguage() {
+      this.stacks = await this.stackService.getAllLanguages()
+      console.log(this.stacks);
     },
-    created() {
-      this.getAllProjects()
-    },
-  };
+    async getAllProjects() {
+      this.projects = await this.projectService.getAllProjects()
+      console.log(this.projects);
+    }
+  },
+  created() {
+    this.getAllProjects()
+  },
+}
 </script>
