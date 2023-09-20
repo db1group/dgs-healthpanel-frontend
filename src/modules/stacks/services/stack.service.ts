@@ -15,4 +15,10 @@ export class StackService {
       return data[0].stacks;
     });
   }
+
+  updateStackByProject(id: string, stacksId: Object): Promise<Stack> {
+    return this.httpClient.put(`stack/project/${id}/confirm-stacks`, stacksId).then(({ data }) => {      
+      return data;
+    });
+  }
 }

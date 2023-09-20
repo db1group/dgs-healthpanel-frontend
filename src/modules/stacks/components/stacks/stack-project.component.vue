@@ -3,13 +3,13 @@
 		<v-card>
 			<v-card-title> Relatório de stacks utilizadas </v-card-title>
 			<v-card-text>
-				<v-text>Selecione o projeto para filtrar, caso queira.</v-text>
+				<v-card-text>Selecione o projeto para filtrar, caso queira.</v-card-text>
 				<v-row justify="end">
 					<v-col cols="12">
 						<v-radio-group
-							v-model="selectedProject"
+							v-model="selectedProjectIndexArray"
 							inline
-							@change="getProjectSelected(selectedProject)"
+							@change="getProjectSelected(selectedProjectIndexArray)"
 						>
 							<v-radio
 								class="ml-2"
@@ -24,7 +24,7 @@
 				</v-row>
 				<v-expansion-panels variant="popout" cols="12">
 						<v-expansion-panel v-for="(proj, index) in projects" :key="index">
-							<v-col v-if="selectedProject === index || selectedProject === null" >
+							<v-col v-if="selectedProjectIndexArray === index || selectedProjectIndexArray === null" >
 									<v-expansion-panel-title @click="getProjectSelected(index)">
 										{{ proj.name }}
 										<v-spacer></v-spacer>
@@ -32,13 +32,18 @@
 											TECH RADAR
 										</v-btn>
 									</v-expansion-panel-title>
-									<v-expansion-panel-text elevation="0">
-										<v-row >
-											<v-col cols="3" lg="3" v-for="(item) in stacks">
+									<v-expansion-panel-text align="center" elevation="0">
+										<v-row class="d-flex" >
+											<v-col justify="space-between" cols="2" lg="2" v-for="(item, stackIndex) in stacks">
 												<default-card
-													title="Stack utilizada"
+													title="Stack Utilizada"
 													:value="item.stackName"
 												/>
+												<v-btn @click="removeStack(proj.id, stackIndex, index)" :color="'red'">Remove</v-btn>
+											</v-col>
+											<v-col cols="2">
+												<v-text-field v-model="newStack" label="Nova Stack"></v-text-field>
+												<v-btn :color="'green'">Adicionar</v-btn>
 											</v-col>
 										</v-row>
 									</v-expansion-panel-text>
@@ -68,10 +73,11 @@ export default {
 		return {
 			stackService: new StackService(inject(HTTP_CLIENT) as HttpClient),
 			projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
-			selectedProject: null,
+			selectedProjectIndexArray: null,
 			stacks: [] as Stack[],
 			projects: [] as Project[],
 			projectsNames: [] as Project[],
+			newStack: '',
 		};
 	},
 	methods: {
@@ -87,7 +93,25 @@ export default {
 		async getProjectSelected(id:number) {
 			const response = await this.filterProjectById(id);
 			this.stacks = response;
-		}
+		},
+		addStack(projectIndex: {}) {
+      if (this.newStack.trim() !== '') {
+        this.projects[projectIndex].stacks.push({ stackName: this.newStack });
+        this.newStack = '';
+      }
+    },
+		async removeStack(projectId: string, stackIndex: number, projectIndex:number) {
+			this.stacks.splice(stackIndex, 1)
+			const stackIdArray: string[] = []
+			this.stacks.map((stack) => {
+				stackIdArray.push(stack.stackId);
+			})
+			const stackId = {
+				"stacksId": stackIdArray
+			}
+			await this.stackService.updateStackByProject(projectId, stackId);
+			await this.getProjectSelected(projectIndex)
+    },
 	},
 	created() {
 		this.getAllProjects()
