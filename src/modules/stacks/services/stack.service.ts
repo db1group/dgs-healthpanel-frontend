@@ -18,7 +18,13 @@ export class StackService {
 
   updateStackByProject(id: string, stacksId: Object): Promise<Stack> {
     return this.httpClient.put(`stack/project/${id}/confirm-stacks`, stacksId).then(({ data }) => {      
-      return data;
+      return data.map((data: any) => new Stack(data));
+    });
+  }
+
+  updateStackSonar(): Promise<Stack> {
+    return this.httpClient.get(`stack/all-languages`).then(({ data }) => {      
+      return data.map((data: any) => new Stack(data));
     });
   }
 }

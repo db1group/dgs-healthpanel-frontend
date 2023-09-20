@@ -43,7 +43,7 @@
 											</v-col>
 											<v-col cols="2">
 												<v-text-field v-model="newStack" label="Nova Stack"></v-text-field>
-												<v-btn :color="'green'">Adicionar</v-btn>
+												<v-btn @click="addStack" :color="'green'">Adicionar</v-btn>
 											</v-col>
 										</v-row>
 									</v-expansion-panel-text>
@@ -57,6 +57,7 @@
 
 <script lang="ts">
 import { Stack } from '../../entities/stack';
+import { stacksBase } from '../../entities/stack-base';
 import DefaultCard from '../../../../components/default-card/default-card.component.vue';
 import { Project } from '../../../project/entities/project';
 import { StackService } from '../../services/stack.service'; 
@@ -94,20 +95,44 @@ export default {
 			const response = await this.filterProjectById(id);
 			this.stacks = response;
 		},
-		addStack(projectIndex: {}) {
-      if (this.newStack.trim() !== '') {
-        this.projects[projectIndex].stacks.push({ stackName: this.newStack });
-        this.newStack = '';
-      }
+		async addStack() {
+      if (this.newStack.trim() === '') return
+
+
+			const sonarStackBase = await this.stackService.updateStackSonar();
+			const sonarStack: Array<Stack> = Object.values(sonarStackBase);
+			const sonarStackValues = sonarStack.map(obj => Object.values(obj));
+			const sonarStackNames = sonarStack.map(obj => Object.values(obj)[1]).sort();
+			console.log(sonarStackValues);
+			
+
+			const stackNamesBase = stacksBase.map(obj => Object.values(obj)[1]).sort();
+
+			if(sonarStackNames !== stackNamesBase) {
+				sonarStackValues.forEach((spacificStack, index) => {
+					if(sonarStackNames[index] !== stackNamesBase[index]) {
+
+					}
+
+				});
+			}
+			stackNamesBase.map((stack) => {
+				if (this.newStack === stack) {}
+			})
+			
+        // this.projects[projectIndex].stacks.push({ stackName: this.newStack });
+        // this.newStack = '';
+      
     },
 		async removeStack(projectId: string, stackIndex: number, projectIndex:number) {
 			this.stacks.splice(stackIndex, 1)
-			const stackIdArray: string[] = []
+			const stacksId: string[] = []
 			this.stacks.map((stack) => {
-				stackIdArray.push(stack.stackId);
+				stacksId.push(stack.stackId);
 			})
 			const stackId = {
-				"stacksId": stackIdArray
+				projectId,
+				stacksId
 			}
 			await this.stackService.updateStackByProject(projectId, stackId);
 			await this.getProjectSelected(projectIndex)

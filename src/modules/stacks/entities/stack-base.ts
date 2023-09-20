@@ -1,4 +1,4 @@
-[
+export const stacksBase = [
     {
         "stackId": "cs",
         "stackName": "C#"
