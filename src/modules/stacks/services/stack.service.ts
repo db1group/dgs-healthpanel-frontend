@@ -18,7 +18,7 @@ export class StackService {
 
   updateStackByProject(id: string, stacksId: Object): Promise<Stack> {
     return this.httpClient.put(`stack/project/${id}/confirm-stacks`, stacksId).then(({ data }) => {      
-      return data.map((data: any) => new Stack(data));
+      return data;
     });
   }
 
@@ -26,5 +26,11 @@ export class StackService {
     return this.httpClient.get(`stack/all-languages`).then(({ data }) => {      
       return data.map((data: any) => new Stack(data));
     });
+  }
+
+  populateStackBySonar(): Promise<void> {
+    return this.httpClient.patch('stack/projects/populate-all').then(({ data }) => {
+      return data;
+    })
   }
 }

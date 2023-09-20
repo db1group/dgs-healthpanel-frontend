@@ -23,9 +23,9 @@
 					</v-col>
 				</v-row>
 				<v-expansion-panels variant="popout" cols="12">
-						<v-expansion-panel v-for="(proj, index) in projects" :key="index">
-							<v-col v-if="selectedProjectIndexArray === index || selectedProjectIndexArray === null" >
-									<v-expansion-panel-title @click="getProjectSelected(index)">
+						<v-expansion-panel v-for="(proj, projIndex) in projects" :key="projIndex">
+							<v-col v-if="selectedProjectIndexArray === projIndex || selectedProjectIndexArray === null" >
+									<v-expansion-panel-title @click="getProjectSelected(projIndex)">
 										{{ proj.name }}
 										<v-spacer></v-spacer>
 										<v-btn :color="'primary'">
@@ -39,11 +39,11 @@
 													title="Stack Utilizada"
 													:value="item.stackName"
 												/>
-												<v-btn @click="removeStack(proj.id, stackIndex, index)" :color="'red'">Remove</v-btn>
+												<v-btn @click="removeStack(proj.id, stackIndex, projIndex)" :color="'red'">Remove</v-btn>
 											</v-col>
 											<v-col cols="2">
-												<v-text-field v-model="newStack" label="Nova Stack"></v-text-field>
-												<v-btn @click="addStack" :color="'green'">Adicionar</v-btn>
+												<v-select :items=sonarStacksNames v-model="newStack" label="Nova Stack"></v-select>
+												<v-btn @click="addStack(proj.id, projIndex)" :color="'green'">Adicionar</v-btn>
 											</v-col>
 										</v-row>
 									</v-expansion-panel-text>
@@ -57,7 +57,6 @@
 
 <script lang="ts">
 import { Stack } from '../../entities/stack';
-import { stacksBase } from '../../entities/stack-base';
 import DefaultCard from '../../../../components/default-card/default-card.component.vue';
 import { Project } from '../../../project/entities/project';
 import { StackService } from '../../services/stack.service'; 
@@ -79,11 +78,15 @@ export default {
 			projects: [] as Project[],
 			projectsNames: [] as Project[],
 			newStack: '',
+			sonarStacksNames: [] as Stack[],
+			stackList: [] as Stack[]
 		};
 	},
 	methods: {
 		async getAllProjects() {
 			const allProject = await this.projectService.getAllProjects();
+			console.log(allProject);
+			
 			this.projects = allProject;
 			this.projectsNames = allProject;
 		},
@@ -94,35 +97,36 @@ export default {
 		async getProjectSelected(id:number) {
 			const response = await this.filterProjectById(id);
 			this.stacks = response;
+			console.log(this.stacks);
+			
 		},
-		async addStack() {
-      if (this.newStack.trim() === '') return
-
-
-			const sonarStackBase = await this.stackService.updateStackSonar();
-			const sonarStack: Array<Stack> = Object.values(sonarStackBase);
-			const sonarStackValues = sonarStack.map(obj => Object.values(obj));
-			const sonarStackNames = sonarStack.map(obj => Object.values(obj)[1]).sort();
-			console.log(sonarStackValues);
-			
-
-			const stackNamesBase = stacksBase.map(obj => Object.values(obj)[1]).sort();
-
-			if(sonarStackNames !== stackNamesBase) {
-				sonarStackValues.forEach((spacificStack, index) => {
-					if(sonarStackNames[index] !== stackNamesBase[index]) {
-
-					}
-
-				});
-			}
-			stackNamesBase.map((stack) => {
-				if (this.newStack === stack) {}
+		async addStack(projectId: string, projectIndex:number) {
+			let newStackSelected:string [] = []
+			this.stackList.map((item) => {
+				if(item.stackName === this.newStack) {
+					newStackSelected = [item.stackId]
+				}
 			})
+
+			const stackId = {
+				projectId,
+				stacksId: newStackSelected
+			}
+			this.stacks.map(previusStacks => stackId.stacksId.push(previusStacks.stackId))
+			console.log(stackId);
 			
-        // this.projects[projectIndex].stacks.push({ stackName: this.newStack });
-        // this.newStack = '';
-      
+
+
+			await this.stackService.updateStackByProject(projectId, stackId);
+			
+			await this.filterProjectById(projectIndex)
+			this.newStack = '';
+		},
+		async consultStackFromSonar() {
+			const originalBaseStacks = await this.stackService.updateStackSonar();
+			await this.stackService.populateStackBySonar()
+			this.stackList = Object.values(originalBaseStacks);
+			this.sonarStacksNames = this.stackList.map(obj => Object.values(obj)[1]).sort();      
     },
 		async removeStack(projectId: string, stackIndex: number, projectIndex:number) {
 			this.stacks.splice(stackIndex, 1)
@@ -139,6 +143,7 @@ export default {
     },
 	},
 	created() {
+		this.consultStackFromSonar()
 		this.getAllProjects()
 	},
 }

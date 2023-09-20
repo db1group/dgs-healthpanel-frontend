@@ -81,4 +81,8 @@ export class AxiosAdapter implements HttpClient {
   async put(url: string, payload: any, config?: any): Promise<any> {
     return this.http.put(url, payload, config);
   }
+
+  async patch(url: string, payload: any, config?: any): Promise<any> {
+    return this.http.patch(url, payload, config);
+  }
 }
