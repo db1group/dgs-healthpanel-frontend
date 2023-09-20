@@ -22,9 +22,7 @@
 						</v-radio-group>
 					</v-col>
 				</v-row>
-				
 				<v-expansion-panels variant="popout" cols="12">
-		
 						<v-expansion-panel v-for="(proj, index) in projects" :key="index">
 							<v-col v-if="selectedProject === index || selectedProject === null" >
 									<v-expansion-panel-title @click="getProjectSelected(index)">
@@ -46,7 +44,6 @@
 									</v-expansion-panel-text>
 							</v-col>
 						</v-expansion-panel>
-			
 				</v-expansion-panels>
 			</v-card-text>
 		</v-card>
@@ -75,18 +72,17 @@ export default {
 			stacks: [] as Stack[],
 			projects: [] as Project[],
 			projectsNames: [] as Project[],
-			openPanel: null,
 		};
 	},
 	methods: {
-		async filterProjectById(id:number) {
-			const specificProjectId = this.projects.find((project, index) => index === id);
-			return this.stackService.getLanguageByProjectId(specificProjectId!.id);
-		},
 		async getAllProjects() {
 			const allProject = await this.projectService.getAllProjects();
 			this.projects = allProject;
 			this.projectsNames = allProject;
+		},
+		async filterProjectById(id:number) {
+			const specificProjectId = this.projects.find((project, index) => index === id);
+			return this.stackService.getLanguageByProjectId(specificProjectId!.id);
 		},
 		async getProjectSelected(id:number) {
 			const response = await this.filterProjectById(id);
