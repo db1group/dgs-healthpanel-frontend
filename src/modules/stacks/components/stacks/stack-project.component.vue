@@ -85,8 +85,6 @@ export default {
 	methods: {
 		async getAllProjects() {
 			const allProject = await this.projectService.getAllProjects();
-			console.log(allProject);
-			
 			this.projects = allProject;
 			this.projectsNames = allProject;
 		},
@@ -101,50 +99,44 @@ export default {
 			
 		},
 		async addStack(projectId: string, projectIndex:number) {
-			let newStackSelected:string [] = []
+			let newStackSelected:string [] = [];
 			this.stackList.map((item) => {
 				if(item.stackName === this.newStack) {
-					newStackSelected = [item.stackId]
+					newStackSelected = [item.stackId];
 				}
-			})
-
+			});
 			const stackId = {
 				projectId,
 				stacksId: newStackSelected
-			}
-			this.stacks.map(previusStacks => stackId.stacksId.push(previusStacks.stackId))
-			console.log(stackId);
-			
-
-
+			};
+			this.stacks.map(previusStacks => stackId.stacksId.push(previusStacks.stackId));
 			await this.stackService.updateStackByProject(projectId, stackId);
-			
-			await this.filterProjectById(projectIndex)
+			await this.filterProjectById(projectIndex);
 			this.newStack = '';
 		},
 		async consultStackFromSonar() {
 			const originalBaseStacks = await this.stackService.updateStackSonar();
-			await this.stackService.populateStackBySonar()
+			//await this.stackService.populateStackBySonar();
 			this.stackList = Object.values(originalBaseStacks);
 			this.sonarStacksNames = this.stackList.map(obj => Object.values(obj)[1]).sort();      
     },
 		async removeStack(projectId: string, stackIndex: number, projectIndex:number) {
 			this.stacks.splice(stackIndex, 1)
-			const stacksId: string[] = []
+			const stacksId: string[] = [];
 			this.stacks.map((stack) => {
 				stacksId.push(stack.stackId);
 			})
 			const stackId = {
 				projectId,
 				stacksId
-			}
+			};
 			await this.stackService.updateStackByProject(projectId, stackId);
-			await this.getProjectSelected(projectIndex)
+			await this.getProjectSelected(projectIndex);
     },
 	},
 	created() {
-		this.consultStackFromSonar()
-		this.getAllProjects()
+		this.consultStackFromSonar();
+		this.getAllProjects();
 	},
 }
 </script>
