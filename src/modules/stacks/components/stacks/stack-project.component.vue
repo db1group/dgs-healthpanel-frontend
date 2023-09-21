@@ -39,7 +39,26 @@
 													title="Stack Utilizada"
 													:value="item.stackName"
 												/>
-												<v-btn @click="removeStack(proj.id, stackIndex, projIndex)" :color="'red'">Remove</v-btn>
+												<v-btn @click="openDiolog(stackIndex)" :color="'red'">Remover</v-btn>
+												<v-dialog
+													v-model="dialog"
+													width="auto"
+												>
+													<v-card>
+														<v-card-text>
+															Excluir {{ stacks[stackIndexToBeExclude].stackName }} do projeto {{ proj.name }}?
+														</v-card-text>
+														<v-card-actions>
+															<v-btn color="primary"  @click="dialog = false">Sair</v-btn>
+															<v-btn 
+															color="danger" 
+															@click="removeStack(proj.id, stackIndexToBeExclude, projIndex)"
+															>
+																Excluir
+															</v-btn>
+														</v-card-actions>
+													</v-card>
+												</v-dialog>
 											</v-col>
 											<v-col cols="2">
 												<v-select :items=sonarStacksNames v-model="newStack" label="Nova Stack"></v-select>
@@ -79,7 +98,9 @@ export default {
 			projectsNames: [] as Project[],
 			newStack: '',
 			sonarStacksNames: [] as Stack[],
-			stackList: [] as Stack[]
+			stackList: [] as Stack[],
+			dialog: false,
+			stackIndexToBeExclude: undefined || 0
 		};
 	},
 	methods: {
@@ -95,8 +116,6 @@ export default {
 		async getProjectSelected(id:number) {
 			const response = await this.filterProjectById(id);
 			this.stacks = response;
-			console.log(this.stacks);
-			
 		},
 		async addStack(projectId: string, projectIndex:number) {
 			let newStackSelected:string [] = [];
@@ -119,7 +138,7 @@ export default {
 			//await this.stackService.populateStackBySonar();
 			this.stackList = Object.values(originalBaseStacks);
 			this.sonarStacksNames = this.stackList.map(obj => Object.values(obj)[1]).sort();      
-    },
+    	},
 		async removeStack(projectId: string, stackIndex: number, projectIndex:number) {
 			this.stacks.splice(stackIndex, 1)
 			const stacksId: string[] = [];
@@ -132,7 +151,12 @@ export default {
 			};
 			await this.stackService.updateStackByProject(projectId, stackId);
 			await this.getProjectSelected(projectIndex);
-    },
+			this.dialog = false
+    	},
+		openDiolog(stackIndex: number) {
+			this.stackIndexToBeExclude = stackIndex
+			this.dialog = true
+		}
 	},
 	created() {
 		this.consultStackFromSonar();
