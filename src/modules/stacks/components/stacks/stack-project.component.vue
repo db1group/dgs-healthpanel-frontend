@@ -33,7 +33,6 @@
 													title="Stack Utilizada"
 													:value="item.stackName"
 												/>
-												{{ stacks }}
 												<v-btn @click="openDiolog(stackIndex)" :color="'red'">Remover</v-btn>
 												<v-dialog
 													v-model="dialog"
