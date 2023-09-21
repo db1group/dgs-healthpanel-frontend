@@ -33,4 +33,10 @@ export class StackService {
       return data;
     })
   }
+
+  addStacks(stackId: Object): Promise<boolean> {
+    return this.httpClient.post(`stack/add/stack`, stackId).then(({ data }) => {
+      return data
+    })
+  }
 }
