@@ -33,6 +33,7 @@
 													title="Stack Utilizada"
 													:value="item.stackName"
 												/>
+												{{ stacks }}
 												<v-btn @click="openDiolog(stackIndex)" :color="'red'">Remover</v-btn>
 												<v-dialog
 													v-model="dialog"
@@ -40,13 +41,13 @@
 												>
 													<v-card>
 														<v-card-text>
-															Excluir {{ stacks[stackIndexToBeExclude].stackName }} do projeto {{ proj.name }}?
+															Excluir stack do projeto {{ proj.name }}?
 														</v-card-text>
 														<v-card-actions>
-															<v-btn color="primary"  @click="dialog = false">Sair</v-btn>
+															<v-btn color="primary" @click="dialog = !dialog">Sair</v-btn>
 															<v-btn 
 															color="danger" 
-															@click="removeStack(proj.id, stackIndexToBeExclude, projIndex)"
+															@click="removeStack(proj.id, stackIndexToBeExclude)"
 															>
 																Excluir
 															</v-btn>
@@ -101,8 +102,9 @@ export default {
 			projectsNames: [] as string[],
 			selectedProjectsNames: [] as string[],
 			newStack: '',
-			sonarStacksNames: [] as Stack[],
-			stackList: [] as Stack[],
+			sonarStacksNames: [] as string[],
+			sonarStacksList: [] as Stack[],
+			stackList: [] as string[],
 			dialog: false,
 			stackIndexToBeExclude: undefined || 0,
 			alreadyInProject: false
@@ -119,13 +121,11 @@ export default {
 			return this.stackService.getLanguageByProjectId(specificProjectId!.id);
 		},
 		async getProjectSelected(id:number) {
-			console.log('pasei');
-			
 			const response = await this.filterProjectById(id);
 			this.stacks = response;
 		},
 		async addStack(projectId: string, projectIndex:number) {
-			this.stackList.map((item) => {
+			this.sonarStacksList.map((item) => {
 				if(item.stackName === this.newStack) {
 					this.newStack = item.stackId
 				}
@@ -139,18 +139,16 @@ export default {
 			} catch (error) {
 				return this.alreadyInProject = true
 			}
-
 			await this.getProjectSelected(projectIndex);
 			this.alreadyInProject = false
 			this.newStack = '';
 		},
 		async consultStackFromSonar() {
-			const originalBaseStacks = await this.stackService.updateStackSonar();
-			//await this.stackService.populateStackBySonar();
-			this.stackList = Object.values(originalBaseStacks);
-			this.sonarStacksNames = this.stackList.map(obj => Object.values(obj)[1]).sort();      
+			this.sonarStacksList = await this.stackService.updateStackSonar();			
+			this.stackList = Object.values(this.sonarStacksList);			
+			this.sonarStacksNames = this.stackList.map(obj => Object.values(obj)[1]).sort();     		 
     	},
-		async removeStack(projectId: string, stackIndex: number, projectIndex:number) {
+		async removeStack(projectId: string, stackIndex: number) {
 			this.dialog = false
 			this.stacks.splice(stackIndex, 1)
 			const stacksId: string[] = [];
@@ -161,16 +159,12 @@ export default {
 				projectId,
 				stacksId
 			};
-			console.log(stackId);
-			
 			await this.stackService.updateStackByProject(projectId, stackId);
-			await this.getProjectSelected(projectIndex);
 			this.newStack = '';	
-
     	},
 		openDiolog(stackIndex: number) {
-			this.stackIndexToBeExclude = stackIndex
 			this.dialog = true
+			this.stackIndexToBeExclude = stackIndex
 		}
 	},
 	created() {
