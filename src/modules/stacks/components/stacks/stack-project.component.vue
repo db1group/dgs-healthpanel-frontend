@@ -5,26 +5,20 @@
 			<v-card-text>
 				<v-card-text>Selecione o projeto para filtrar, caso queira.</v-card-text>
 				<v-row justify="end">
-					<v-col cols="12">
-						<v-radio-group
-							v-model="selectedProjectIndexArray"
-							inline
-							@change="getProjectSelected(selectedProjectIndexArray)"
-						>
-							<v-radio
-								class="ml-2"
-								color="primary"
-								v-for="(item, index) in projectsNames"
-								:key="index"
-								:label="item.name"
-								:value="index"
-							></v-radio>
-						</v-radio-group>
-					</v-col>
+					<v-select 
+						width="50%"
+						class="ml-2"
+						color="primary"
+						:items="projectsNames"
+						label="Projetos existentes"
+						v-model="selectedProjectsNames"
+						chips
+						multiple
+					></v-select>
 				</v-row>
 				<v-expansion-panels variant="popout" cols="12">
 						<v-expansion-panel v-for="(proj, projIndex) in projects" :key="projIndex">
-							<v-col v-if="selectedProjectIndexArray === projIndex || selectedProjectIndexArray === null" >
+							<v-col v-if="selectedProjectsNames.includes(proj.name) || selectedProjectsNames.length === 0" >
 									<v-expansion-panel-title @click="getProjectSelected(projIndex)">
 										{{ proj.name }}
 										<v-spacer></v-spacer>
@@ -102,10 +96,10 @@ export default {
 		return {
 			stackService: new StackService(inject(HTTP_CLIENT) as HttpClient),
 			projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
-			selectedProjectIndexArray: null,
 			stacks: [] as Stack[],
 			projects: [] as Project[],
-			projectsNames: [] as Project[],
+			projectsNames: [] as string[],
+			selectedProjectsNames: [] as string[],
 			newStack: '',
 			sonarStacksNames: [] as Stack[],
 			stackList: [] as Stack[],
@@ -118,13 +112,15 @@ export default {
 		async getAllProjects() {
 			const allProject = await this.projectService.getAllProjects();
 			this.projects = allProject;
-			this.projectsNames = allProject;
+			allProject.map(proj => this.projectsNames.push(proj.name))
 		},
 		async filterProjectById(id:number) {
 			const specificProjectId = this.projects.find((project, index) => index === id);
 			return this.stackService.getLanguageByProjectId(specificProjectId!.id);
 		},
 		async getProjectSelected(id:number) {
+			console.log('pasei');
+			
 			const response = await this.filterProjectById(id);
 			this.stacks = response;
 		},
