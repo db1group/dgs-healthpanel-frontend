@@ -45,7 +45,7 @@ export class StackHandler {
 
     }
 
-    async addStack(projectId: string, projectIndex:number, stack: string) {
+    async addStack(projectId: string, stack: string) {
         this.sonarStackList.map((item) => {
             if(item.stackName === stack) {
                 stack = item.stackId
@@ -55,16 +55,10 @@ export class StackHandler {
             projectId,
             StackId: stack
         }
-        
         return await this.stackService.addStacks(stackToInclude).then(
             data => data
         ).catch(
             err => err
         )
-
-
-
-
     }
-
 }

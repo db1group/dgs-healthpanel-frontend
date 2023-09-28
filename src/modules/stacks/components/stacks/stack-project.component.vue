@@ -82,8 +82,6 @@
 
 <script lang="ts">
 import { Stack } from '../../entities/stack';
-import { StackToInclude } from '../../entities/stackToInclude';
-import { StackToRemove } from '../../entities/stackToRemove';
 import { StackHandler } from '../../handler/StackHandler';
 import DefaultCard from '../../../../components/default-card/default-card.component.vue';
 import { Project } from '../../../project/entities/project';
@@ -104,7 +102,6 @@ export default {
 			projects: [] as Project[],
 			projectsNames: [] as string[],
 			stackHandler: new StackHandler(new StackService(inject(HTTP_CLIENT) as HttpClient), new ProjectService(inject(HTTP_CLIENT) as HttpClient)),
-
 			stacks: [] as Stack[],
 			selectedProjectsNames: [] as string[],
 			newStack: '',
@@ -114,40 +111,18 @@ export default {
 			dialog: false,
 			stackIndexToBeExclude: undefined || 0,
 			alreadyInProject: false,
-			stackToInclude: {} as StackToInclude
 		};
 	},
 	methods: {
 		async getAllProjects() {
-			//this.projects = await this.projectService.getAllProjects()	
-			//this.projectsNames = this.projects.map(proj => proj.name)
 			this.projects = await this.stackHandler.getAllProjects()
 			this.projectsNames = this.projects.map(project => project.name)
 		},
 		async filterProjectById(id:number) {
-			// const specificProjectId = this.projects.find((project, index) => index === id);
-			// return this.stackService.getLanguageByProjectId(specificProjectId!.id);
 			this.stacks = await this.stackHandler.filterProjectById(id)
 		},
 		async addStack(projectId: string, projectIndex:number) {
-			// this.sonarStacksList.map((item) => {
-			// 	if(item.stackName === this.newStack) {
-			// 		this.newStack = item.stackId
-			// 	}
-			// })
-			// this.stackToInclude = {
-			// 	projectId,
-			// 	StackId: this.newStack
-			// }
-			
-			// var stackadded = await this.stackService.addStacks(this.stackToInclude)
-			// 	.catch(() => {
-			// 		this.newStack = ''
-			// 		return this.alreadyInProject = true
-			// 	}
-			// );
-
-			const stackadded = await this.stackHandler.addStack(projectId, projectIndex, this.newStack)
+			const stackadded = await this.stackHandler.addStack(projectId, this.newStack)
 			console.log(stackadded);
 			
 			if(!stackadded) {
@@ -160,26 +135,11 @@ export default {
 
 		},
 		async consultStackFromSonar() {
-			// this.sonarStacksList = await this.stackService.updateStackSonar();			
-			// this.stackList = Object.values(this.sonarStacksList);			
-			// this.sonarStacksNames = this.stackList.map(obj => Object.values(obj)[1]).sort();     		 
 			this.sonarStacksList =  await this.stackHandler.consultStackFromSonar();
 			this.stackList = Object.values(this.sonarStacksList);			
 			this.sonarStacksNames = this.stackList.map(obj => Object.values(obj)[1]).sort();     		 
 		},
 		async removeStack(projectId: string, stackIndex: number) {
-			// console.log(this.stacks);
-			
-			// this.stacks.splice(stackIndex, 1)
-			// const stacksId: string[] = [];
-			// this.stacks.map((stack) => {
-			// 	stacksId.push(stack.stackId);
-			// })
-			// const stackId = {
-			// 	projectId,
-			// 	stacksId
-			// };
-			// await this.stackService.updateStackByProject(projectId, stackId);
 			await this.stackHandler.removeStack(projectId, stackIndex)
 			this.dialog = false
 			this.newStack = '';	
@@ -206,4 +166,3 @@ export default {
 	},
 }
 </script>
-../../entities/Dtos/stackToRemove../../entities/Dtos/stackToInclude
