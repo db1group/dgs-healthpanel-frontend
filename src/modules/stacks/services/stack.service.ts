@@ -2,7 +2,7 @@ import { HttpClient } from '../../../infra/http/http';
 import { StackServiceInterface } from '../Interfaces/StackServiceInterface';
 import { Stack } from '../entities/stack';
 
-export class StackService implements StackServiceInterface {
+export class StackService {
   constructor(private readonly httpClient: HttpClient) {}
 
   getAllLanguages(): Promise<Stack[]> {

@@ -84,6 +84,7 @@
 import { Stack } from '../../entities/stack';
 import { StackToInclude } from '../../entities/stackToInclude';
 import { StackToRemove } from '../../entities/stackToRemove';
+import { StackHandler } from '../../handler/StackHandler';
 import DefaultCard from '../../../../components/default-card/default-card.component.vue';
 import { Project } from '../../../project/entities/project';
 import { StackService } from '../../services/stack.service'; 
@@ -100,9 +101,11 @@ export default {
 		return {
 			stackService: new StackService(inject(HTTP_CLIENT) as HttpClient),
 			projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
-			stacks: [] as Stack[],
 			projects: [] as Project[],
 			projectsNames: [] as string[],
+			stackHandler: new StackHandler(new StackService(inject(HTTP_CLIENT) as HttpClient), new ProjectService(inject(HTTP_CLIENT) as HttpClient)),
+
+			stacks: [] as Stack[],
 			selectedProjectsNames: [] as string[],
 			newStack: '',
 			sonarStacksNames: [] as string[],
@@ -116,16 +119,20 @@ export default {
 	},
 	methods: {
 		async getAllProjects() {
-			this.projects = await this.projectService.getAllProjects()	
-			this.projectsNames = this.projects.map(proj => proj.name)
+			//this.projects = await this.projectService.getAllProjects()	
+			//this.projectsNames = this.projects.map(proj => proj.name)
+			this.projects = await this.stackHandler.getAllProjects()
+			this.projectsNames = this.projects.map(project => project.name)
 		},
 		async filterProjectById(id:number) {
-			const specificProjectId = this.projects.find((project, index) => index === id);
-			return this.stackService.getLanguageByProjectId(specificProjectId!.id);
+			// const specificProjectId = this.projects.find((project, index) => index === id);
+			// return this.stackService.getLanguageByProjectId(specificProjectId!.id);
+			await this.stackHandler.filterProjectById(id)
 		},
 		async getProjectSelected(id:number) {
-			const response:Stack = await this.filterProjectById(id);
-			this.stacks = response ;
+			// const response:Stack = await this.filterProjectById(id);
+			// this.stacks = response ;
+			await this.stackHandler.getProjectSelected(id)
 		},
 		async addStack(projectId: string, projectIndex:number) {
 			this.sonarStacksList.map((item) => {
@@ -185,10 +192,7 @@ export default {
 			this.selectedProjectsNames.length === 0
 		);
 		},
-	},
-	computed: {
-		
- 	},
+	},	
 	created() {
 		this.consultStackFromSonar();
 		this.getAllProjects();
