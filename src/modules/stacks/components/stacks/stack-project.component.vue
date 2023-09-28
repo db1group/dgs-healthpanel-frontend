@@ -42,13 +42,13 @@
 												>
 													<v-card>
 														<v-card-text>
-															Excluir stack do projeto {{ proj.name }}?
+															Excluir stack do projeto {{ project.name }}?
 														</v-card-text>
 														<v-card-actions>
 															<v-btn color="primary" @click="dialog = !dialog">Sair</v-btn>
 															<v-btn 
 															color="danger" 
-															@click="removeStack(proj.id, stackIndexToBeExclude)"
+															@click="removeStack(project.id, stackIndexToBeExclude)"
 															>
 																Excluir
 															</v-btn>
@@ -64,7 +64,7 @@
 													label="Nova Stack">
 												</v-select>
 												<v-btn 
-													@click="addStack(proj.id, projIndex)" 
+													@click="addStack(project.id, projIndex)" 
 													color="green">
 													Adicionar
 												</v-btn>
