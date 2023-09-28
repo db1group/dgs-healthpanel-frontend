@@ -6,11 +6,4 @@ export class Stack {
         this.stackId = data.stackId;
         this.stackName = data.stackName;
     }
-
-    format() {
-        return [{
-            stackId: this.stackId,
-            stackName: this.stackName
-        }]
-    }
 }

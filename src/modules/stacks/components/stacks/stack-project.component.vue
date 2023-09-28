@@ -17,26 +17,28 @@
 					></v-select>
 				</v-row>
 				<v-expansion-panels variant="popout" cols="12">
-						<v-expansion-panel v-for="(proj, projIndex) in projects" :key="projIndex">
-							<v-col v-if="selectedProjectsNames.includes(proj.name) || selectedProjectsNames.length === 0" >
+						<v-expansion-panel v-for="(project, projIndex) in projects" :key="projIndex">
+								<v-col v-if="shouldShowProject(project.name)">
 									<v-expansion-panel-title @click="getProjectSelected(projIndex)">
-										{{ proj.name }}
+										{{ project.name }}
 										<v-spacer></v-spacer>
-										<v-btn :color="'primary'">
-											TECH RADAR
-										</v-btn>
 									</v-expansion-panel-title>
 									<v-expansion-panel-text align="center" elevation="0">
+										<v-col align="end" cols="12">
+										<v-btn  :color="'primary'">
+										TECH RADAR
+										</v-btn>
+										</v-col>
 										<v-row class="d-flex" >
 											<v-col justify="space-between" cols="2" lg="2" v-for="(item, stackIndex) in stacks">
 												<default-card
-													title="Stack Utilizada"
-													:value="item.stackName"
+												title="Stack Utilizada"
+												:value="item.stackName"
 												/>
 												<v-btn @click="openDiolog(stackIndex)" :color="'red'">Remover</v-btn>
 												<v-dialog
-													v-model="dialog"
-													width="auto"
+												v-model="dialog"
+												width="auto"
 												>
 													<v-card>
 														<v-card-text>
@@ -63,10 +65,10 @@
 												</v-select>
 												<v-btn 
 													@click="addStack(proj.id, projIndex)" 
-													:color="'green'">
+													color="green">
 													Adicionar
 												</v-btn>
-												<v-card-text v-if="alreadyInProject">Stack ja cadastrada</v-card-text>
+												<v-card-text style="color: rgb(247, 116, 116);" v-if="alreadyInProject">Stack ja cadastrada</v-card-text>
 											</v-col>
 										</v-row>
 									</v-expansion-panel-text>
@@ -80,6 +82,8 @@
 
 <script lang="ts">
 import { Stack } from '../../entities/stack';
+import { StackToInclude } from '../../entities/stackToInclude';
+import { StackToRemove } from '../../entities/stackToRemove';
 import DefaultCard from '../../../../components/default-card/default-card.component.vue';
 import { Project } from '../../../project/entities/project';
 import { StackService } from '../../services/stack.service'; 
@@ -103,25 +107,25 @@ export default {
 			newStack: '',
 			sonarStacksNames: [] as string[],
 			sonarStacksList: [] as Stack[],
-			stackList: [] as string[],
+			stackList: [] as Stack[],
 			dialog: false,
 			stackIndexToBeExclude: undefined || 0,
-			alreadyInProject: false
+			alreadyInProject: false,
+			stackToInclude: {} as StackToInclude
 		};
 	},
 	methods: {
 		async getAllProjects() {
-			const allProject = await this.projectService.getAllProjects();
-			this.projects = allProject;
-			allProject.map(proj => this.projectsNames.push(proj.name))
+			this.projects = await this.projectService.getAllProjects()	
+			this.projectsNames = this.projects.map(proj => proj.name)
 		},
 		async filterProjectById(id:number) {
 			const specificProjectId = this.projects.find((project, index) => index === id);
 			return this.stackService.getLanguageByProjectId(specificProjectId!.id);
 		},
 		async getProjectSelected(id:number) {
-			const response = await this.filterProjectById(id);
-			this.stacks = response;
+			const response:Stack = await this.filterProjectById(id);
+			this.stacks = response ;
 		},
 		async addStack(projectId: string, projectIndex:number) {
 			this.sonarStacksList.map((item) => {
@@ -129,18 +133,23 @@ export default {
 					this.newStack = item.stackId
 				}
 			})
-			const stackToInclude = {
+			this.stackToInclude = {
 				projectId,
 				StackId: this.newStack
 			}
-			try {
-				await this.stackService.addStacks(stackToInclude);
-			} catch (error) {
-				return this.alreadyInProject = true
+			
+			var stackadded = await this.stackService.addStacks(this.stackToInclude)
+				.catch(() => {
+					this.newStack = ''
+					return this.alreadyInProject = true
+				}
+			);
+
+			if(!stackadded) {
+				await this.getProjectSelected(projectIndex);
+				this.resetAddField()
 			}
-			await this.getProjectSelected(projectIndex);
-			this.alreadyInProject = false
-			this.newStack = '';
+
 		},
 		async consultStackFromSonar() {
 			this.sonarStacksList = await this.stackService.updateStackSonar();			
@@ -150,13 +159,13 @@ export default {
 		async removeStack(projectId: string, stackIndex: number) {
 			this.dialog = false
 			this.stacks.splice(stackIndex, 1)
-			const stacksId: string[] = [];
+			const StackId: string[] = [];
 			this.stacks.map((stack) => {
-				stacksId.push(stack.stackId);
+				StackId.push(stack.stackName);
 			})
-			const stackId = {
+			const stackId: StackToRemove = {
 				projectId,
-				stacksId
+				StackId
 			};
 			await this.stackService.updateStackByProject(projectId, stackId);
 			this.newStack = '';	
@@ -164,8 +173,22 @@ export default {
 		openDiolog(stackIndex: number) {
 			this.dialog = true
 			this.stackIndexToBeExclude = stackIndex
-		}
+		},
+		resetAddField() {
+			this.newStack = '';
+			this.alreadyInProject = false
+		},
+		shouldShowProject(project: string) {
+
+		return (
+			this.selectedProjectsNames.includes(project) ||
+			this.selectedProjectsNames.length === 0
+		);
+		},
 	},
+	computed: {
+		
+ 	},
 	created() {
 		this.consultStackFromSonar();
 		this.getAllProjects();
