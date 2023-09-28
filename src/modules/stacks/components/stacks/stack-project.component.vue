@@ -19,7 +19,7 @@
 				<v-expansion-panels variant="popout" cols="12">
 						<v-expansion-panel v-for="(project, projIndex) in projects" :key="projIndex">
 								<v-col v-if="shouldShowProject(project.name)">
-									<v-expansion-panel-title @click="getProjectSelected(projIndex)">
+									<v-expansion-panel-title @click="filterProjectById(projIndex)">
 										{{ project.name }}
 										<v-spacer></v-spacer>
 									</v-expansion-panel-title>
@@ -127,56 +127,64 @@ export default {
 		async filterProjectById(id:number) {
 			// const specificProjectId = this.projects.find((project, index) => index === id);
 			// return this.stackService.getLanguageByProjectId(specificProjectId!.id);
-			await this.stackHandler.filterProjectById(id)
-		},
-		async getProjectSelected(id:number) {
-			// const response:Stack = await this.filterProjectById(id);
-			// this.stacks = response ;
-			await this.stackHandler.getProjectSelected(id)
+			this.stacks = await this.stackHandler.filterProjectById(id)
 		},
 		async addStack(projectId: string, projectIndex:number) {
-			this.sonarStacksList.map((item) => {
-				if(item.stackName === this.newStack) {
-					this.newStack = item.stackId
-				}
-			})
-			this.stackToInclude = {
-				projectId,
-				StackId: this.newStack
-			}
+			// this.sonarStacksList.map((item) => {
+			// 	if(item.stackName === this.newStack) {
+			// 		this.newStack = item.stackId
+			// 	}
+			// })
+			// this.stackToInclude = {
+			// 	projectId,
+			// 	StackId: this.newStack
+			// }
 			
-			var stackadded = await this.stackService.addStacks(this.stackToInclude)
-				.catch(() => {
-					this.newStack = ''
-					return this.alreadyInProject = true
-				}
-			);
+			// var stackadded = await this.stackService.addStacks(this.stackToInclude)
+			// 	.catch(() => {
+			// 		this.newStack = ''
+			// 		return this.alreadyInProject = true
+			// 	}
+			// );
 
+			const stackadded = await this.stackHandler.addStack(projectId, projectIndex, this.newStack)
+			console.log(stackadded);
+			
 			if(!stackadded) {
-				await this.getProjectSelected(projectIndex);
+				await this.filterProjectById(projectIndex);
 				this.resetAddField()
+			} else {
+				this.newStack = ''
+                return this.alreadyInProject = true
 			}
 
 		},
 		async consultStackFromSonar() {
-			this.sonarStacksList = await this.stackService.updateStackSonar();			
+			// this.sonarStacksList = await this.stackService.updateStackSonar();			
+			// this.stackList = Object.values(this.sonarStacksList);			
+			// this.sonarStacksNames = this.stackList.map(obj => Object.values(obj)[1]).sort();     		 
+			this.sonarStacksList =  await this.stackHandler.consultStackFromSonar();
 			this.stackList = Object.values(this.sonarStacksList);			
 			this.sonarStacksNames = this.stackList.map(obj => Object.values(obj)[1]).sort();     		 
-    	},
+		},
 		async removeStack(projectId: string, stackIndex: number) {
+			// console.log(this.stacks);
+			
+			// this.stacks.splice(stackIndex, 1)
+			// const stacksId: string[] = [];
+			// this.stacks.map((stack) => {
+			// 	stacksId.push(stack.stackId);
+			// })
+			// const stackId = {
+			// 	projectId,
+			// 	stacksId
+			// };
+			// await this.stackService.updateStackByProject(projectId, stackId);
+			await this.stackHandler.removeStack(projectId, stackIndex)
 			this.dialog = false
-			this.stacks.splice(stackIndex, 1)
-			const StackId: string[] = [];
-			this.stacks.map((stack) => {
-				StackId.push(stack.stackName);
-			})
-			const stackId: StackToRemove = {
-				projectId,
-				StackId
-			};
-			await this.stackService.updateStackByProject(projectId, stackId);
 			this.newStack = '';	
-    	},
+		
+		},
 		openDiolog(stackIndex: number) {
 			this.dialog = true
 			this.stackIndexToBeExclude = stackIndex
@@ -186,11 +194,10 @@ export default {
 			this.alreadyInProject = false
 		},
 		shouldShowProject(project: string) {
-
-		return (
-			this.selectedProjectsNames.includes(project) ||
-			this.selectedProjectsNames.length === 0
-		);
+			return (
+				this.selectedProjectsNames.includes(project) ||
+				this.selectedProjectsNames.length === 0
+			);
 		},
 	},	
 	created() {
@@ -199,3 +206,4 @@ export default {
 	},
 }
 </script>
+../../entities/Dtos/stackToRemove../../entities/Dtos/stackToInclude

@@ -1,9 +1,9 @@
 export class StackToRemove {
     projectId: string
-    StackId: string[]
+    StacksId: string[]
 
     constructor(data:any = {}) {
         this.projectId = data.projectId;
-        this.StackId = data.StackId;
+        this.StacksId = data.StackId;
     }
 }
