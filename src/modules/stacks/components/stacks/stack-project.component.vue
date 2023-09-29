@@ -98,14 +98,12 @@
 </template>
 
 <script lang="ts">
-  import { Stack } from '../../entities/stack';
   import { StackHandler } from '../../handler/StackHandler';
   import DefaultCard from '../../../../components/default-card/default-card.component.vue';
   import { StackService } from '../../services/stack.service';
   import { inject } from 'vue';
   import { ProjectService } from '../../../project/services/project.service';
   import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
-  import { StackServiceInterface } from '../../Interfaces/StackServiceInterface';
 
   export default {
     components: {
@@ -114,15 +112,11 @@
 
     data() {
       return {
-        stackServiceTeste: new StackService(
-          inject(HTTP_CLIENT) as HttpClient,
-        ) as StackServiceInterface,
-        projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
-        projectsNames: [] as string[],
         stackHandler: new StackHandler(
           new StackService(inject(HTTP_CLIENT) as HttpClient),
           new ProjectService(inject(HTTP_CLIENT) as HttpClient),
         ),
+        projectsNames: [] as string[],
         selectedProjectsNames: [] as string[],
         newStack: '',
         sonarStacksNames: [] as string[],
@@ -183,4 +177,3 @@
     },
   };
 </script>
-../../Interfaces/IStackService

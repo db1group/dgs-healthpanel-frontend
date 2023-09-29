@@ -11,7 +11,7 @@ export class StackService implements IStackService {
     });
   }
 
-  getLanguageByProjectId(id: string): Promise<Stack> {
+  getLanguageByProjectId(id: string): Promise<Stack[]> {
     return this.httpClient.get(`stack/projects?`, {
       params: {
         projectId: id
