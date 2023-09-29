@@ -1,20 +1,22 @@
 import { Project } from "../../project/entities/project";
-import { ProjectService } from "../../project/services/project.service";
 import { Stack } from "../entities/stack";
 import { StackToRemove } from "../entities/Dtos/stackToRemove";
-import { StackService } from "../services/stack.service";
 import { StackToInclude } from "../entities/Dtos/stackToInclude";
+import { IStackService } from "../Interfaces/IStackService";
+import { IProjectService } from "../../project/Interfaces/IProjectService";
 
 export class StackHandler {
-    private projects: Project[] = []
-    private stacks: Stack[] = []
-    private sonarStackList: Stack[] = []
+    public projects: Project[] = []
+    public projectsNames: string[] = []
+    public stacks: Stack[] = []
+    public sonarStackList: Stack[] = []
+    public stackList: Stack[] = []
 
-    constructor(private stackService: StackService,
-        private projectService: ProjectService) {}
+    constructor(private readonly stackService: IStackService, private readonly projectService: IProjectService) {}
 
     async getAllProjects() {
         this.projects = await this.projectService.getAllProjects()
+        this.projectsNames = this.projects.map(project => project.name)
         return this.projects
     }
 
@@ -26,12 +28,12 @@ export class StackHandler {
 
     async consultStackFromSonar() {
         this.sonarStackList = await this.stackService.updateStackSonar()
+        this.stackList = Object.values(this.sonarStackList);
+        
         return this.sonarStackList;			
     }
 
     async removeStack(projectId: string, stackIndex: number) {
-        console.log(this.stacks);
-        
         this.stacks.splice(stackIndex, 1)
         const StacksId: string[] = [];
         this.stacks.map((stack) => {
@@ -42,7 +44,6 @@ export class StackHandler {
             StacksId
         };
         await this.stackService.updateStackByProject(projectId, stackId);
-
     }
 
     async addStack(projectId: string, stack: string) {

@@ -1,8 +1,8 @@
 import { HttpClient } from '../../../infra/http/http';
-import { StackServiceInterface } from '../Interfaces/StackServiceInterface';
+import { IStackService } from '../Interfaces/IStackService';
 import { Stack } from '../entities/stack';
 
-export class StackService {
+export class StackService implements IStackService {
   constructor(private readonly httpClient: HttpClient) {}
 
   getAllLanguages(): Promise<Stack[]> {

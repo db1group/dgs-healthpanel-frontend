@@ -1,8 +1,9 @@
 import { HttpClient } from '../../../infra/http/http';
+import { IProjectService } from '../Interfaces/IProjectService';
 import { CostCenter } from '../entities/cost-center';
 import { Project } from '../entities/project';
 
-export class ProjectService {
+export class ProjectService implements IProjectService {
   constructor(private readonly httpClient: HttpClient) {}
 
   getAllProjects(): Promise<Project[]> {
