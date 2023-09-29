@@ -11,6 +11,8 @@ export class StackHandler {
     public stacks: Stack[] = []
     public sonarStackList: Stack[] = []
     public stackList: Stack[] = []
+    public sonarStackNames: Stack[] = []
+    public selectedProjectsNames: string[] = []
 
     constructor(private readonly stackService: IStackService, private readonly projectService: IProjectService) {}
 
@@ -29,6 +31,9 @@ export class StackHandler {
     async consultStackFromSonar() {
         this.sonarStackList = await this.stackService.updateStackSonar()
         this.stackList = Object.values(this.sonarStackList);
+        this.sonarStackNames = this.stackList
+        .map((obj) => Object.values(obj)[1])
+        .sort();
         
         return this.sonarStackList;			
     }
@@ -61,5 +66,10 @@ export class StackHandler {
         ).catch(
             err => err
         )
+    }
+
+    haveToShowProject(projects: string): boolean {
+        return this.selectedProjectsNames.includes(projects) ||
+        this.selectedProjectsNames.length === 0
     }
 }

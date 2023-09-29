@@ -13,7 +13,7 @@
             color="primary"
             :items="stackHandler.projectsNames"
             label="Projetos existentes"
-            v-model="selectedProjectsNames"
+            v-model="stackHandler.selectedProjectsNames"
             chips
             multiple
           ></v-select>
@@ -69,7 +69,7 @@
                   </v-col>
                   <v-col cols="2">
                     <v-select
-                      :items="sonarStacksNames"
+                      :items="stackHandler.sonarStackNames"
                       :error="alreadyInProject"
                       v-model="newStack"
                       label="Nova Stack"
@@ -116,10 +116,7 @@
           new StackService(inject(HTTP_CLIENT) as HttpClient),
           new ProjectService(inject(HTTP_CLIENT) as HttpClient),
         ),
-        projectsNames: [] as string[],
-        selectedProjectsNames: [] as string[],
         newStack: '',
-        sonarStacksNames: [] as string[],
         dialog: false,
         stackIndexToBeExclude: undefined || 0,
         alreadyInProject: false,
@@ -146,10 +143,6 @@
       },
       async consultStackFromSonar() {
         await this.stackHandler.consultStackFromSonar();
-        Object.values(this.stackHandler.sonarStackList);
-        this.sonarStacksNames = this.stackHandler.stackList
-          .map((obj) => Object.values(obj)[1])
-          .sort();
       },
       async removeStack(projectId: string, stackIndex: number) {
         await this.stackHandler.removeStack(projectId, stackIndex);
@@ -165,10 +158,7 @@
         this.alreadyInProject = false;
       },
       shouldShowProject(project: string) {
-        return (
-          this.selectedProjectsNames.includes(project) ||
-          this.selectedProjectsNames.length === 0
-        );
+        return this.stackHandler.haveToShowProject(project);
       },
     },
     created() {
