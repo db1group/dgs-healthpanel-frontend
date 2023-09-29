@@ -40,13 +40,13 @@ export class StackHandler {
 
     async removeStack(projectId: string, stackIndex: number) {
         this.stacks.splice(stackIndex, 1)
-        const StacksId: string[] = [];
+        const stacksId: string[] = [];
         this.stacks.map((stack) => {
-            StacksId.push(stack.stackId);
+            stacksId.push(stack.stackId);
         })
         const stackId: StackToRemove = {
             projectId,
-            StacksId
+            stacksId
         };
         await this.stackService.updateStackByProject(projectId, stackId);
     }
@@ -59,7 +59,7 @@ export class StackHandler {
         })
         const stackToInclude: StackToInclude = {
             projectId,
-            StackId: stack
+            stackId: stack
         }
         return await this.stackService.addStacks(stackToInclude).then(
             data => data
