@@ -54,6 +54,13 @@
         value="techlead"
         @click="goToPage('lead-engineer-list')"
       ></v-list-item>
+      <v-list-item
+        v-if="isManager"
+        title="Stacks"
+        prepend-icon="mdi-access-point"
+        value="stacks"
+        @click="goToPage('stacks-projects-list')"
+      ></v-list-item>
     </v-list>
     <template v-slot:append>
       <div class="pa-2 pb-5">
@@ -105,6 +112,7 @@
       'bruno.rossmann',
       'debora.fabri',
       'robson.cachoeira',
+      'thiago.cruz'
     ];
 
     return usersManagers.includes(store.usercode);

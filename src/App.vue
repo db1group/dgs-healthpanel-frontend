@@ -39,7 +39,7 @@
               item-value="value"
             />
           </v-col>
-        </v-row> -->
+        </v-row>  -->
       </v-toolbar>
 
       <section v-if="isAuthenticated">

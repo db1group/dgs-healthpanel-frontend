@@ -5,6 +5,7 @@ import Ranking from '../modules/ranking/ranking.vue';
 import HealthPanelBI from '../modules/health-panel-chart/health-panel-bi.vue';
 import projectModule from '../modules/project/router';
 import techLeadModule from '../modules/techlead/router';
+import stackModule from '../modules/stacks/router';
 
 const routes = [
   { name: 'form', path: '/', component: Form },
@@ -14,10 +15,10 @@ const routes = [
     name: 'health-panel-bi',
     path: '/painel-de-saude',
     component: HealthPanelBI,
-  },
+  }
 ];
 
 export const router = createRouter({
   history: createWebHistory(),
-  routes: [...routes, ...projectModule, ...techLeadModule],
+  routes: [...routes, ...projectModule, ...techLeadModule, ...stackModule],
 });
