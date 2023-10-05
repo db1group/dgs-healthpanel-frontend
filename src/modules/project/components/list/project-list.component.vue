@@ -6,6 +6,14 @@
         <v-btn @click="goToForm" color="primary">Cadastrar novo projeto</v-btn>
       </v-row>
     </v-card-title>
+    <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Projetos"
+        single-line
+        hide-details
+        class="pa-4"
+      ></v-text-field>
     <v-card-text>
       <v-data-table
         v-model:items-per-page="itemsPerPage"
@@ -13,6 +21,7 @@
         :items="projects"
         item-value="name"
         class="elevation-1"
+        :search="search"
       >
         <template v-slot:item.actions="{ item }">
           <v-btn @click="editItem(item.raw)" icon>
@@ -55,6 +64,7 @@ export default {
         },
       ],
       projects: [] as Project[],
+      search: ''
     };
   },
   methods: {

@@ -8,6 +8,13 @@
         >
       </v-row>
     </v-card-title>
+    <v-text-field
+        v-model="search"
+        label="Pesquisar Leads"
+        single-line
+        hide-details
+        class="pa-4"
+      ></v-text-field>
     <v-card-text>
       <v-data-table
         v-model:items-per-page="itemsPerPage"
@@ -15,6 +22,7 @@
         :items="leads"
         item-value="name"
         class="elevation-1"
+        :search="search"
       >
         <template v-slot:item.inTraining="{ item }">
           {{item.columns.inTraining ? 'Sim' : 'Não'}}
@@ -47,6 +55,7 @@ export default {
         { title: 'Ações', align: 'start', key: 'actions', width: '10%' },
       ],
       leads: [] as LeadEngineer[],
+      search: ''
     };
   },
   methods: {
