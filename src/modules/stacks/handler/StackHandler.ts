@@ -1,9 +1,9 @@
-import { Project } from "../../project/entities/project";
-import { Stack } from "../entities/stack";
-import { StackToRemove } from "../entities/Dtos/stackToRemove";
-import { StackToInclude } from "../entities/Dtos/stackToInclude";
-import { IStackService } from "../Interfaces/IStackService";
 import { IProjectService } from "../../project/Interfaces/IProjectService";
+import { Project } from "../../project/entities/project";
+import { IStackService } from "../Interfaces/IStackService";
+import { StackToInclude } from "../entities/Dtos/stackToInclude";
+import { StackToRemove } from "../entities/Dtos/stackToRemove";
+import { Stack } from "../entities/stack";
 
 export class StackHandler {
     public projects: Project[] = []
@@ -14,18 +14,19 @@ export class StackHandler {
     public sonarStackNames: Stack[] = []
     public selectedProjectsNames: string[] = []
 
-    constructor(private readonly stackService: IStackService, private readonly projectService: IProjectService) {}
+    constructor(
+      private readonly stackService: IStackService,
+      private readonly projectService: IProjectService) {}
 
     async getAllProjects() {
-        this.projects = await this.projectService.getAllProjects()
-        this.projectsNames = this.projects.map(project => project.name)
-        return this.projects
+        this.projects = await this.projectService.getAllProjects();
+        this.projectsNames = this.projects.map(project => project.name);
+        return this.projects;
     }
 
-    async filterProjectById(id:number) {
-        const specificProjectId = this.projects.find((project, index) => index === id);
-        this.stacks = await this.stackService.getLanguageByProjectId(specificProjectId!.id)
-        return this.stacks;
+    async getStacksById(id:string) {
+      this.stacks = await this.stackService.getLanguageByProjectId(id);
+      return this.stacks;
     }
 
     async consultStackFromSonar() {
@@ -34,8 +35,8 @@ export class StackHandler {
         this.sonarStackNames = this.stackList
         .map((obj) => Object.values(obj)[1])
         .sort();
-        
-        return this.sonarStackList;			
+
+        return this.sonarStackList;
     }
 
     async removeStack(projectId: string, stackIndex: number) {
