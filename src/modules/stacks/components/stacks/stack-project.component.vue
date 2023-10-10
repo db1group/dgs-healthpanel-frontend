@@ -104,8 +104,8 @@
               Perfil de Aderência ao Tech Radar
             </v-card-title>
             <v-divider></v-divider>
-            <v-card-item v-for="(stack) in stackHandler.stackComparisson!.techRadarResponses">
-              <v-card :color="stackHandler.resolveStackColor(stack)" class="pa-3 mb-3" variant="tonal">
+            <v-card-item v-for="(stack) in radarHandler.stackComparisson!.techRadarResponses">
+              <v-card :color="radarHandler.resolveStackColor(stack)" class="pa-3 mb-3" variant="tonal">
                 <v-card-subtitle> Stack </v-card-subtitle>
                 <v-card-title > {{ stack.title }} </v-card-title>
               </v-card>
@@ -114,7 +114,7 @@
           </v-col>
 
           <v-col>
-            <adherence-percentual :adherence-response="stackHandler.stackComparisson!.adherenceResponse">
+            <adherence-percentual :adherence-response="radarHandler.stackComparisson!.adherenceResponse">
             </adherence-percentual>
           </v-col>
         </v-row>
@@ -139,11 +139,16 @@
   import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
   import { TechRadarService } from '../../services/techradar.service';
   import AdherencePercentual from '../adhrence-percentual/adherence-percentual.component.vue';
+  import { RadarHandler } from '../../handler/RadarHandler';
 
   export default {
     data() {
         return {
-            stackHandler: new StackHandler(new StackService(inject(HTTP_CLIENT) as HttpClient), new ProjectService(inject(HTTP_CLIENT) as HttpClient), new TechRadarService(inject(HTTP_CLIENT) as HttpClient)),
+            stackHandler: new StackHandler(
+              new StackService(inject(HTTP_CLIENT) as HttpClient),
+              new ProjectService(inject(HTTP_CLIENT) as HttpClient)),
+            radarHandler: new RadarHandler(
+              new TechRadarService(inject(HTTP_CLIENT) as HttpClient)),
             newStack: '',
             dialog: false,
             isStackModalOpen: false,
@@ -180,7 +185,7 @@
             this.stackIndexToBeExclude = stackIndex;
         },
         async openTechModal(projectId: string) {
-            await this.stackHandler.getTechComparissonByIds(projectId);
+            await this.radarHandler.getTechComparissonByIds(projectId);
             this.isStackModalOpen = true;
         },
         resetAddField() {

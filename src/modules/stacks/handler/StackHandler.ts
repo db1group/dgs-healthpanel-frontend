@@ -1,19 +1,14 @@
-import { Project } from "../../project/entities/project";
-import { Stack } from "../entities/stack";
-import { StackToRemove } from "../entities/Dtos/stackToRemove";
-import { StackToInclude } from "../entities/Dtos/stackToInclude";
-import { IStackService } from "../Interfaces/IStackService";
 import { IProjectService } from "../../project/Interfaces/IProjectService";
-import { ITechRadarService } from "../Interfaces/ITechRadarService";
-import { ProjectTechRadarResponse } from "../entities/Dtos/projectTechRadarResponse.1";
-import { TechRadarResponse } from "../entities/Dtos/techRadarResponse";
-import { RING } from "../entities/ring";
+import { Project } from "../../project/entities/project";
+import { IStackService } from "../Interfaces/IStackService";
+import { StackToInclude } from "../entities/Dtos/stackToInclude";
+import { StackToRemove } from "../entities/Dtos/stackToRemove";
+import { Stack } from "../entities/stack";
 
 export class StackHandler {
     public projects: Project[] = []
     public projectsNames: string[] = []
     public stacks: Stack[] = []
-    public stackComparisson: ProjectTechRadarResponse | undefined = new ProjectTechRadarResponse();
     public sonarStackList: Stack[] = []
     public stackList: Stack[] = []
     public sonarStackNames: Stack[] = []
@@ -21,8 +16,7 @@ export class StackHandler {
 
     constructor(
       private readonly stackService: IStackService,
-      private readonly projectService: IProjectService,
-      private readonly techRadarService: ITechRadarService) {}
+      private readonly projectService: IProjectService) {}
 
     async getAllProjects() {
         this.projects = await this.projectService.getAllProjects();
@@ -33,26 +27,6 @@ export class StackHandler {
     async getStacksById(id:string) {
       this.stacks = await this.stackService.getLanguageByProjectId(id);
       return this.stacks;
-    }
-
-    async getTechComparissonByIds(id:string) {
-      this.stackComparisson = await (await this.techRadarService.getRadarTechComparisonByList([id])).find(e => e.projectId === id);
-      return this.stackComparisson;
-    }
-
-    resolveStackColor(techResponse:TechRadarResponse): string{
-      switch(techResponse.ring) {
-        case RING.ADOPT:
-          return 'green'
-        case RING.ASSESS:
-          return 'yellow'
-        case RING.EXPERIMENT:
-          return 'blue'
-        case RING.AVOID:
-          return 'red';
-        default:
-          return 'grey';
-      }
     }
 
     async consultStackFromSonar() {
