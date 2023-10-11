@@ -21,11 +21,18 @@ export class StackService implements IStackService {
     });
   }
 
-  updateStackByProject(id: string, stacksId: Object): Promise<Stack> {
-    return this.httpClient.put(`stack/project/${id}/confirm-stacks`
-    , stacksId).then(({ data }) => {      
-      return data;
-    });
+  removeStacksFromProject(id: string, stacksId: string[]): Promise<void> {
+    return this.httpClient
+      .delete(`project/stacks`,  {
+        params: { 
+          id: id,
+          stacksId: stacksId
+        },
+        paramsSerializer: {
+          indexes: true, // use brackets with indexes
+        }
+      })
+      .then(({ data }) => { return data; });
   }
 
   updateStackSonar(): Promise<Stack[]> {
