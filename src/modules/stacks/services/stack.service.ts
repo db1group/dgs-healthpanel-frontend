@@ -23,15 +23,7 @@ export class StackService implements IStackService {
 
   removeStacksFromProject(id: string, stacksId: string[]): Promise<void> {
     return this.httpClient
-      .delete(`project/stacks`,  {
-        params: { 
-          id: id,
-          stacksId: stacksId
-        },
-        paramsSerializer: {
-          indexes: true, // use brackets with indexes
-        }
-      })
+      .put(`project/${id}/disable-stacks`,  { stacksId: stacksId })
       .then(({ data }) => { return data; });
   }
 
