@@ -6,6 +6,12 @@ export class Project {
 
   public name: string;
 
+  public sonarName: string;
+
+  public sonarUrl: string;
+  
+  public sonarToken: string;
+
   public costCenter: CostCenter;
 
   public leads: LeadEngineer[];
@@ -13,6 +19,9 @@ export class Project {
   constructor(data: any = {}) {
     this.id = data.id;
     this.name = data.name;
+    this.sonarName = data.sonarName;
+    this.sonarUrl = data.sonarUrl;
+    this.sonarToken = data.sonarToken;
     this.costCenter = new CostCenter(data.costCenter);
     this.leads = data.leadProjects?.length
       ? this.getLeads(data.leadProjects)
@@ -42,6 +51,9 @@ export class Project {
     return {
       id: this.id,
       name: this.name,
+      sonarName: this.sonarName,
+      sonarToken: this.sonarToken,
+      sonarUrl: this.sonarUrl,
       costCenter: { id: this.costCenter.id },
       leadProjects: this.leads.length
         ? this.leads.map((it) => ({ LeadId: it.id }))
