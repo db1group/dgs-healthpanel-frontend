@@ -24,7 +24,7 @@
         :search="search"
       >
         <template v-slot:item.actions="{ item }">
-          <v-btn @click="editItem(item.raw)" icon>
+          <v-btn @click="editItem(item)" icon>
             <v-icon size="small"> mdi-pencil </v-icon>
           </v-btn>
         </template>

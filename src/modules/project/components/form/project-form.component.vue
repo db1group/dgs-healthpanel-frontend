@@ -40,6 +40,29 @@
             ></v-select>
           </v-col>
         </v-row>
+        <v-row>
+          <v-col cols="12" lg="4">
+            <v-text-field
+              variant="outlined"
+              v-model="project.sonarName"
+              label="Nome no Sonar"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" lg="4">
+            <v-text-field
+              variant="outlined"
+              v-model="project.sonarUrl"
+              label="URL Sonar"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" lg="4">
+            <v-text-field
+              variant="outlined"
+              v-model="project.sonarToken"
+              label="Token Sonar"
+            ></v-text-field>
+          </v-col>
+        </v-row>
       </v-form>
     </v-card-text>
     <v-card-actions>
