@@ -130,6 +130,8 @@
               buttonColor: 'white',
               color: 'success',
             });
+            
+            this.showDialog = true;
           })
           .catch(() => {
             this.$snackbar.open({
