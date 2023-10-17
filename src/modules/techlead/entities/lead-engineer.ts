@@ -19,6 +19,9 @@ export class LeadEngineer {
       : [];
   }
 
+  get inTrainingLabel() {
+    return this.inTraining ? 'Sim' : 'Não';
+  }
   private getProjectsId(projects: { projectId: string }[] = []) {
     return projects
       .map((project) => {

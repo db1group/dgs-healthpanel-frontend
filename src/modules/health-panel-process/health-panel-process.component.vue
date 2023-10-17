@@ -53,7 +53,7 @@
               size="large"
               variant="outlined"
               color="primary"
-              @click="sendForm()"
+              @click="sendForm"
               >Enviar form</v-btn
             >
           </v-col>
@@ -131,7 +131,7 @@
               color: 'success',
             });
             
-            this.showDialog = true;
+
           })
           .catch(() => {
             this.$snackbar.open({

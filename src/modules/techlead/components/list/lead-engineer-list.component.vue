@@ -24,9 +24,6 @@
         class="elevation-1"
         :search="search"
       >
-        <template v-slot:item.inTraining="{ item }">
-          {{item.columns.inTraining ? 'Sim' : 'Não'}}
-        </template>
         <template v-slot:item.actions="{ item }">
           <v-btn @click="editItem(item.raw)" icon>
             <v-icon size="small"> mdi-pencil </v-icon>
@@ -50,7 +47,7 @@ export default {
       leadService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
       headers: [
         { title: 'Lead', align: 'start', key: 'name' },
-        { title: 'Em Capacitação?', align: 'start', key: 'inTraining' },
+        { title: 'Em Capacitação?', align: 'start', key: 'inTrainingLabel' },
         { title: 'Email', align: 'start', key: 'email' },
         { title: 'Ações', align: 'start', key: 'actions', width: '10%' },
       ],
