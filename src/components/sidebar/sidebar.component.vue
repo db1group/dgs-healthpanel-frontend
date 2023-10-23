@@ -114,6 +114,7 @@
       'robson.cachoeira',
       'thiago.cruz',
       'matheus.rossetti',
+      'rodolpho.toppan',
       'roberto.padilha',
     ];
 
