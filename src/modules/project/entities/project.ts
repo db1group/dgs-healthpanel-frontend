@@ -9,7 +9,7 @@ export class Project {
   public sonarName: string;
 
   public sonarUrl: string;
-  
+
   public sonarToken: string;
 
   public costCenter: CostCenter;
@@ -32,9 +32,7 @@ export class Project {
     if (!leadProjects || !leadProjects.length) {
       return [];
     }
-    return leadProjects
-      .map((it: any) => new LeadEngineer(it.lead))
-      .filter((it: LeadEngineer) => it);
+    return leadProjects.map((it: any) => it.leadName);
   }
 
   get leadsNames(): string {
@@ -42,9 +40,7 @@ export class Project {
       return '';
     }
 
-    return this.leads
-      .map((it: LeadEngineer) => it.name)
-      .join(', ');
+    return this.leads.join(', ');
   }
 
   format() {

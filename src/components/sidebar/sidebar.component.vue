@@ -113,7 +113,8 @@
       'debora.fabri',
       'robson.cachoeira',
       'thiago.cruz',
-      'matheus.rossetti'
+      'matheus.rossetti',
+      'rodolpho.toppan',
     ];
 
     return usersManagers.includes(store.usercode);
