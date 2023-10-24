@@ -46,7 +46,11 @@
             </v-col>
           </v-row>
         </v-col>
-        <v-col cols="12" :lg="showSidebar ? 9 : 12" v-if="chartDataSet.labels.length">
+        <v-col
+          cols="12"
+          :lg="showSidebar ? 9 : 12"
+          v-if="chartDataSet.labels.length"
+        >
           <v-tabs v-model="tab" fixed-tabs color="primary">
             <v-tab
               color="primary"
@@ -161,11 +165,14 @@
       async getEvaluationsAnalytics(
         currentMonth: number = new Date().getMonth(),
       ) {
-        const analyticsFilter = new AnalyticsFilter(currentMonth, this.dateService);
-        this.evaluationsAnalytics =
-          await this.healthPanelChartService.getAnalyticsEvaluation(
-            analyticsFilter,
-          );
+        this.$loader.open();
+        const analyticsFilter = new AnalyticsFilter(
+          currentMonth,
+          this.dateService,
+        );
+        this.evaluationsAnalytics = await this.healthPanelChartService
+          .getAnalyticsEvaluation(analyticsFilter)
+          .finally(() => this.$loader.close());
       },
       getData() {
         this.getDataSet();

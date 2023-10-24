@@ -7,13 +7,13 @@
       </v-row>
     </v-card-title>
     <v-text-field
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Projetos"
-        single-line
-        hide-details
-        class="pa-4"
-      ></v-text-field>
+      v-model="search"
+      append-icon="mdi-magnify"
+      label="Projetos"
+      single-line
+      hide-details
+      class="pa-4"
+    ></v-text-field>
     <v-card-text>
       <v-data-table
         v-model:items-per-page="itemsPerPage"
@@ -34,53 +34,54 @@
 </template>
 
 <script lang="ts">
-import { inject } from 'vue';
-import { Project } from '../../entities/project';
-import { ProjectService } from '../../services/project.service';
-import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
+  import { inject } from 'vue';
+  import { Project } from '../../entities/project';
+  import { ProjectService } from '../../services/project.service';
+  import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
 
-export default {
-  data() {
-    return {
-      itemsPerPage: 15,
-      projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
-      headers: [
-        {
-          title: 'Projeto',
-          align: 'start',
-          sortable: false,
-          key: 'name',
-        },
-        {
-          title: 'Leads',
-          align: 'start',
-          key: 'leadsNames'
-        },
-        {
-          title: 'Ações',
-          align: 'start',
-          key: 'actions',
-          width: '10%'
-        },
-      ],
-      projects: [] as Project[],
-      search: ''
-    };
-  },
-  methods: {
-    editItem(item: Project) {
-      this.$router.push({ name: 'project-edit', params: { id: item.id } });
+  export default {
+    data() {
+      return {
+        itemsPerPage: 15,
+        projectService: new ProjectService(inject(HTTP_CLIENT) as HttpClient),
+        headers: [
+          {
+            title: 'Projeto',
+            align: 'start',
+            sortable: false,
+            key: 'name',
+          },
+          {
+            title: 'Leads',
+            align: 'start',
+            key: 'leadsNames'
+          },
+          {
+            title: 'Ações',
+            align: 'start',
+            key: 'actions',
+            width: '10%'
+          },
+        ],
+        projects: [] as Project[],
+        search: ''
+      };
     },
-    goToForm() {
-      this.$router.push({ name: 'project-create' });
-    },
+    methods: {
+      editItem(item: Project) {
+        this.$router.push({ name: 'project-edit', params: { id: item.id } });
+      },
+      goToForm() {
+        this.$router.push({ name: 'project-create' });
+      },
 
-    async getAllProjects() {
-      this.projects = await this.projectService.getAllProjects();
+      async getAllProjects() {
+        this.projects = await this.projectService.getAllProjects();
+      },
     },
-  },
-  created() {
-    this.getAllProjects();
-  },
-};
+    created() {
+      this.$loader.open();
+      this.getAllProjects().finally(() => this.$loader.close());
+    },
+  };
 </script>

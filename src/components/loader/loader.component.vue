@@ -4,7 +4,7 @@
     attach="body"
     z-index="2000"
     :model-value="loader.show"
-    class="align-center justify-center"
+    class="justify-center align-center position-fixed"
   >
     <v-progress-circular
       color="primary"
@@ -15,14 +15,14 @@
 </template>
 
 <script lang="ts">
-export default {
-  data() {
-    return {
-      loader: this.$loader,
-    };
-  },
-  created() {
-    this.loader = this.$loader;
-  },
-};
+  export default {
+    data() {
+      return {
+        loader: this.$loader,
+      };
+    },
+    created() {
+      this.loader = this.$loader;
+    },
+  };
 </script>
