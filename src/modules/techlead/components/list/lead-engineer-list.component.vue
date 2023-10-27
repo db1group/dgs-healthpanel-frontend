@@ -9,12 +9,12 @@
       </v-row>
     </v-card-title>
     <v-text-field
-        v-model="search"
-        label="Pesquisar Leads"
-        single-line
-        hide-details
-        class="pa-4"
-      ></v-text-field>
+      v-model="search"
+      label="Pesquisar Leads"
+      single-line
+      hide-details
+      class="pa-4"
+    ></v-text-field>
     <v-card-text>
       <v-data-table
         v-model:items-per-page="itemsPerPage"
@@ -35,43 +35,47 @@
 </template>
 
 <script lang="ts">
-import { inject } from 'vue';
-import { LeadEngineer } from '../../entities/lead-engineer';
-import { LeadService } from '../../services/lead.service';
-import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
+  import { inject } from 'vue';
+  import { LeadEngineer } from '../../entities/lead-engineer';
+  import { LeadService } from '../../services/lead.service';
+  import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
 
-export default {
-  data() {
-    return {
-      itemsPerPage: 15,
-      leadService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
-      headers: [
-        { title: 'Lead', align: 'start', key: 'name' },
-        { title: 'Em Capacitação?', align: 'start', key: 'inTrainingLabel' },
-        { title: 'Email', align: 'start', key: 'email' },
-        { title: 'Ações', align: 'start', key: 'actions', width: '10%' },
-      ],
-      leads: [] as LeadEngineer[],
-      search: ''
-    };
-  },
-  methods: {
-    editItem(item: LeadEngineer) {
-      this.$router.push({
-        name: 'lead-engineer-edit',
-        params: { id: item.id },
-      });
+  export default {
+    data() {
+      return {
+        itemsPerPage: 15,
+        leadService: new LeadService(inject(HTTP_CLIENT) as HttpClient),
+        headers: [
+          { title: 'Lead', align: 'start', value: 'name' },
+          {
+            title: 'Em Capacitação?',
+            align: 'start',
+            value: 'inTrainingLabel',
+          },
+          { title: 'Email', align: 'start', value: 'email' },
+          { title: 'Ações', align: 'start', value: 'actions', width: '10%' },
+        ],
+        leads: [] as LeadEngineer[],
+        search: '',
+      };
     },
-    goToForm() {
-      this.$router.push({ name: 'lead-engineer-create' });
-    },
+    methods: {
+      editItem(item: LeadEngineer) {
+        this.$router.push({
+          name: 'lead-engineer-edit',
+          params: { id: item.id },
+        });
+      },
+      goToForm() {
+        this.$router.push({ name: 'lead-engineer-create' });
+      },
 
-    async getAllLeads() {
-      this.leads = await this.leadService.getAllLeads();
+      async getAllLeads() {
+        this.leads = await this.leadService.getAllLeads();
+      },
     },
-  },
-  created() {
-    this.getAllLeads();
-  },
-};
+    created() {
+      this.getAllLeads();
+    },
+  };
 </script>

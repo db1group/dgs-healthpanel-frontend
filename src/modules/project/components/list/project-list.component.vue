@@ -49,17 +49,17 @@
             title: 'Projeto',
             align: 'start',
             sortable: false,
-            key: 'name',
+            value: 'name',
           },
           {
             title: 'Leads',
             align: 'start',
-            key: 'leadsNames'
+            value: 'leadsNames'
           },
           {
             title: 'Ações',
             align: 'start',
-            key: 'actions',
+            value: 'actions',
             width: '10%'
           },
         ],
