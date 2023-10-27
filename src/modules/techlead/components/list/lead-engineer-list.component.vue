@@ -54,7 +54,7 @@
           },
           { title: 'Email', align: 'start', value: 'email' },
           { title: 'Ações', align: 'start', value: 'actions', width: '10%' },
-        ],
+        ] as any,
         leads: [] as LeadEngineer[],
         search: '',
       };

@@ -62,7 +62,7 @@
             value: 'actions',
             width: '10%'
           },
-        ],
+        ] as any,
         projects: [] as Project[],
         search: ''
       };

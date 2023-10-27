@@ -23,11 +23,11 @@ export default {
           title: 'Projeto',
           align: 'start',
           sortable: false,
-          key: 'project',
+          value: 'project',
         },
-        { title: 'Lead engineer', align: 'start', key: 'lead' },
-        { title: 'Data da resposta', align: 'start', key: 'anwsered_at' },
-      ],
+        { title: 'Lead engineer', align: 'start', value: 'lead' },
+        { title: 'Data da resposta', align: 'start', value: 'anwsered_at' },
+      ] as any,
       projects: [
         {
           project: 'Al5 Bank',
