@@ -10,8 +10,8 @@ export class LeadEngineer {
   public projects: string[];
 
   constructor(data: any = {}) {
-    this.id = data.id;
-    this.name = data.name;
+    this.id = data.id || data.leadId;
+    this.name = data.name || data.leadName;
     this.email = data.email;
     this.inTraining = data.inTraining === true;
     this.projects = data.leadProjects?.length

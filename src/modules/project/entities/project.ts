@@ -32,15 +32,16 @@ export class Project {
     if (!leadProjects || !leadProjects.length) {
       return [];
     }
-    return leadProjects.map((it: any) => it.leadName);
+    return leadProjects
+      .map((it: any) => new LeadEngineer(it))
+      .filter((it: LeadEngineer) => it);
   }
 
   get leadsNames(): string {
     if (!this.leads || !this.leads.length) {
       return '';
     }
-
-    return this.leads.join(', ');
+    return this.leads.map((it) => it.name).join(', ');
   }
 
   format() {
