@@ -88,11 +88,8 @@
                   <v-btn @click="addStack(project.id)" color="green">
                     Adicionar
                   </v-btn>
-                  <v-card-text
-                    style="color: rgb(247, 116, 116)"
-                    v-if="alreadyInProject"
-                  >
-                    Stack ja cadastrada
+                  <v-card-text style="color: rgb(247, 116, 116)">
+                    {{ errorMessage }}
                   </v-card-text>
                 </v-col>
               </v-row>
@@ -171,6 +168,7 @@
         isStackModalOpen: false,
         stackIndexToBeExclude: undefined || 0,
         alreadyInProject: false,
+        errorMessage: '',
       };
     },
     methods: {
@@ -178,6 +176,7 @@
         await this.stackHandler.getAllProjects();
       },
       async getStacksById(id: string) {
+        this.resetAddField();
         return await this.stackHandler.getStacksById(id);
       },
       async addStack(projectId: string) {
@@ -189,8 +188,19 @@
           await this.getStacksById(projectId);
           return this.resetAddField();
         }
-        this.newStack = '';
-        return (this.alreadyInProject = true);
+        return this.showMessageError();
+      },
+      showMessageError() {
+        if (this.newStack)
+          return (
+            this.newStack = '',
+            this.alreadyInProject = true,
+            this.errorMessage = 'Stack já cadastrada'
+          );
+        return (
+          this.alreadyInProject = true,
+          this.errorMessage = 'Nenhuma stack informada'
+        );
       },
       async consultStackFromSonar() {
         await this.stackHandler.consultStackFromSonar();
@@ -212,6 +222,7 @@
         this.isStackModalOpen = true;
       },
       resetAddField() {
+        this.errorMessage = '';
         this.newStack = '';
         this.alreadyInProject = false;
       },
