@@ -12,6 +12,8 @@ export class Project {
 
   public sonarToken: string;
 
+  public sonarKeys: string;
+
   public costCenter: CostCenter;
 
   public leads: LeadEngineer[];
@@ -22,6 +24,7 @@ export class Project {
     this.sonarName = data.sonarName;
     this.sonarUrl = data.sonarUrl;
     this.sonarToken = data.sonarToken;
+    this.sonarKeys = data.sonarProjectKeys;
     this.costCenter = new CostCenter(data.costCenter);
     this.leads = data.leadProjects?.length
       ? this.getLeads(data.leadProjects)
@@ -51,6 +54,7 @@ export class Project {
       sonarName: this.sonarName,
       sonarToken: this.sonarToken,
       sonarUrl: this.sonarUrl,
+      sonarProjectKeys: this.sonarKeys,
       costCenter: { id: this.costCenter.id },
       leadProjects: this.leads.length
         ? this.leads.map((it) => ({ LeadId: it.id }))
