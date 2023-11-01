@@ -37,7 +37,8 @@
               required
               item-title="name"
               item-value="id"
-            ></v-select>
+              :rules="[rules.required]"
+            />
           </v-col>
         </v-row>
         <v-row>

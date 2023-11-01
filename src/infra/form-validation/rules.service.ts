@@ -5,11 +5,17 @@ class RulesService {
     return reg.test(value) ? true : 'Email inválido';
   }
 
-  public required(value: string | Array<any>) {
+  public required(value: string | Array<any> | Object) {
     if (value === null || value === undefined || value === '') {
       return 'Campo obrigatório.';
     }
     if (value instanceof Array && value.length === 0) {
+      return 'Campo obrigatório.';
+    }
+    if (
+      value instanceof Object &&
+      Object.values(value).every((prop) => prop === '')
+    ) {
       return 'Campo obrigatório.';
     }
     return true;
