@@ -34,7 +34,6 @@
               v-model="project.leads"
               return-object
               label="Lead do projeto"
-              required
               item-title="name"
               item-value="id"
               :rules="[rules.required]"
@@ -62,6 +61,14 @@
               v-model="project.sonarToken"
               label="Token Sonar"
             ></v-text-field>
+          </v-col>
+          <v-col cols="12" lg="4">
+            <v-textarea
+              variant="outlined"
+              v-model="project.sonarKeys"
+              label="IDs dos projetos separados por vírgula"
+              auto-grow
+            ></v-textarea>
           </v-col>
         </v-row>
       </v-form>
