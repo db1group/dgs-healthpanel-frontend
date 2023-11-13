@@ -36,7 +36,6 @@
               label="Lead do projeto"
               item-title="name"
               item-value="id"
-              :rules="[rules.required]"
             />
           </v-col>
         </v-row>

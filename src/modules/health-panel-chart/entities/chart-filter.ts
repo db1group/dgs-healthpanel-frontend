@@ -34,10 +34,21 @@ export class ChartFilter implements EvaluationFilter {
   format(): BackendEvaluationFilter {
     const startDate = this.getFirstYear();
     const endDate = this.getLastYear();
+    let filterStartDate;
+    let filterEndDate;
 
+    if (startDate && endDate) {
+      filterStartDate = `01/01/${startDate}`;
+      filterEndDate = `12/31/${endDate}`;
+    } else if (startDate) {
+      filterStartDate = `01/01/${startDate}`;
+      filterEndDate = `12/31/${startDate}`;
+    } else {
+      filterStartDate = filterEndDate = undefined;
+    }
     return {
-      startDate: startDate ? `01/01/${startDate}` : undefined,
-      endDate: endDate ? `01/01/${endDate}` : undefined,
+      startDate: filterStartDate ? filterStartDate : undefined,
+      endDate: filterEndDate ? filterEndDate : undefined,
       costCenterIds: this.costCenter?.length ? this.costCenter : undefined,
     };
   }
