@@ -20,7 +20,7 @@
           @click.stop="toggleSidebar"
         ></v-app-bar-nav-icon>
 
-        <v-toolbar-title>Painel de saúde 2.0 </v-toolbar-title>
+        <v-toolbar-title> {{ $t('appName') }} </v-toolbar-title>
       </v-toolbar>
 
       <section v-if="isAuthenticated">
@@ -33,7 +33,6 @@
 <script setup lang="ts">
   import { inject, onMounted, ref } from 'vue';
   import { AuthAd, AUTH_AD } from './infra/auth/auth-ad';
-  import { HealthPanel } from './modules/health-panel-process/domain/health-panel';
   import SidebarComponent from './components/sidebar/sidebar.component.vue';
   import LoaderComponent from './components/loader/loader.component.vue';
   import SnackbarComponent from './components/snackbar/snackbar.component.vue';
@@ -44,7 +43,6 @@
 
   let isAuthenticated = ref(false);
 
-
   function toggleSidebar() {
     drawer.value = !drawer.value;
   }
@@ -52,5 +50,4 @@
   onMounted(async () => {
     isAuthenticated.value = await authService.connect();
   });
-
 </script>

@@ -16,6 +16,7 @@ import { GlobalServices } from './infra/global-services/global-services';
 import { LoaderInterface } from './components/loader/services/loader.interface';
 import { ISnackbar } from './components/snackbar/interfaces/snackbar.interface';
 import { ChartRegister } from './infra/chart/chart.register';
+import { i18n } from './i18n';
 
 const pinia = createPinia();
 const vuetify = createVuetify({
@@ -39,12 +40,14 @@ const vuetify = createVuetify({
   },
 });
 
-const app = createApp(App).use(vuetify).use(pinia).use(router);
+const app = createApp(App).use(vuetify).use(pinia).use(router).use(i18n);
+
 const dependencyInjectionManager = new DependencyInjection(app);
 const globalServicesManager = new GlobalServices(app);
 dependencyInjectionManager.execute();
 globalServicesManager.execute();
 ChartRegister.register();
+
 app.mount('#app');
 
 declare module 'vue' {
