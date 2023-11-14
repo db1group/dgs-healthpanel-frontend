@@ -3,7 +3,9 @@
     <v-card-text>
       <v-row>
         <v-col cols="12">
-          <canvas ref="myChart" />
+          <div class="chart-container">
+            <canvas ref="myChart" />
+          </div>
         </v-col>
       </v-row>
     </v-card-text>
@@ -64,7 +66,7 @@
               },
             },
             responsive: true,
-
+            maintainAspectRatio: false,
             scales: {
               y: {
                 beginAtZero: true,
@@ -78,7 +80,8 @@
   };
 </script>
 <style lang="sass">
-  .chart
+  .chart-container
+    position: relative
+    height: 65vh
     width: 100%
-    height: 100%
 </style>

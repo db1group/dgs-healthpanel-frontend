@@ -23,7 +23,10 @@
         <v-toolbar-title>Painel de saúde 2.0 </v-toolbar-title>
       </v-toolbar>
 
-      <section v-if="isAuthenticated">
+      <section
+        v-if="isAuthenticated"
+        :style="{ marginLeft: drawer ? '300px' : '0', transition: '0.2s' }"
+      >
         <router-view />
       </section>
     </div>
@@ -44,7 +47,6 @@
 
   let isAuthenticated = ref(false);
 
-
   function toggleSidebar() {
     drawer.value = !drawer.value;
   }
@@ -52,5 +54,4 @@
   onMounted(async () => {
     isAuthenticated.value = await authService.connect();
   });
-
 </script>
