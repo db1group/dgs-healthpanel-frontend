@@ -9,12 +9,12 @@ const SUPPORTED_LANGUAGES = ['en', 'pt'] as const;
 
 type SupportedLanguages = (typeof SUPPORTED_LANGUAGES)[number];
 
-const messages: Record<(typeof SUPPORTED_LANGUAGES)[number], MessageSchema> = {
+const messages: Readonly<Record<SupportedLanguages, MessageSchema>> = {
   en,
   pt,
 };
 
-const i18n = createI18n<[MessageSchema], SupportedLanguages>({
+const i18n = createI18n({
   messages,
 });
 
@@ -26,7 +26,7 @@ function setupI18nLanguageByBrowser() {
       ) &&
       i18n.global.locale !== lang
     ) {
-      i18n.global.locale = lang as (typeof SUPPORTED_LANGUAGES)[number];
+      i18n.global.locale = lang as SupportedLanguages;
       document.querySelector('html')!.lang = lang;
       document.title = 'DGS - ' + i18n.global.t('appName');
       return;
