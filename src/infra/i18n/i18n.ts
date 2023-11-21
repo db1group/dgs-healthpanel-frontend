@@ -1,11 +1,11 @@
 import { createI18n } from 'vue-i18n';
 
-const en = (await import('./locales/en.json')).default;
-const pt = (await import('./locales/pt-BR.json')).default;
+import * as en from './locales/en.json';
+import * as pt from './locales/pt-BR.json';
 
 type MessageSchema = typeof en;
 
-const SUPPORTED_LANGUAGES = ['en', 'pt'] as const;
+const SUPPORTED_LANGUAGES = ['en', 'pt'];
 
 type SupportedLanguages = (typeof SUPPORTED_LANGUAGES)[number];
 

@@ -16,7 +16,7 @@ import { GlobalServices } from './infra/global-services/global-services';
 import { LoaderInterface } from './components/loader/services/loader.interface';
 import { ISnackbar } from './components/snackbar/interfaces/snackbar.interface';
 import { ChartRegister } from './infra/chart/chart.register';
-import { i18n } from './i18n';
+import { i18n } from './infra/i18n/i18n';
 
 const pinia = createPinia();
 const vuetify = createVuetify({
