@@ -15,8 +15,8 @@
             <p class="text-center">
               Esse painel tem o propósito de coletar informações sobre a saúde
               técnica dos projetos e ser uma ferramenta que irá te auxiliar na
-              evolução deles. Esperamos que você utilize isso no seu
-              dia-a-dia e que seja uma ferramenta que te ajude de fato!
+              evolução deles. Esperamos que você utilize isso no seu dia-a-dia e
+              que seja uma ferramenta que te ajude de fato!
             </p>
           </v-col>
           <v-col cols="12">
@@ -68,8 +68,6 @@
   const emit = defineEmits(['input']);
 
   const project = ref('');
-
-  const quantityDevs = ref(3);
 
   const projects: Project[] = reactive([]);
 
