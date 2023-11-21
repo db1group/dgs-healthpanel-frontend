@@ -24,7 +24,7 @@
             <v-form ref="form">
               <v-row>
                 <v-col cols="12" lg="12">
-                  <v-select
+                  <v-autocomplete
                     label="Selecione o projeto"
                     variant="outlined"
                     :rules="[rules.required]"
