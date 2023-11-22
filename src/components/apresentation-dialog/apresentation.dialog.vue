@@ -13,18 +13,17 @@
           </v-col>
           <v-col cols="12">
             <p class="text-center">
-              Sim, esse form é maior do que nosso antigo formulário. No entanto
-              as respostas aqui serão salvas e você só deverá editar aquilo que
-              de fato mudou em seu projeto. Esperamos que sua experiência seja
-              melhor e que você consiga ter uma visibilidade daquilo que podemos
-              melhorar nos projetos em que você está envolvido.
+              Esse painel tem o propósito de coletar informações sobre a saúde
+              técnica dos projetos e ser uma ferramenta que irá te auxiliar na
+              evolução deles. Esperamos que você utilize isso no seu dia-a-dia e
+              que seja uma ferramenta que te ajude de fato!
             </p>
           </v-col>
           <v-col cols="12">
             <v-form ref="form">
               <v-row>
                 <v-col cols="12" lg="12">
-                  <v-select
+                  <v-autocomplete
                     label="Selecione o projeto"
                     variant="outlined"
                     :rules="[rules.required]"
@@ -54,46 +53,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, inject } from 'vue';
-import { Project } from '../../modules/project/entities/project';
-import { ProjectService } from '../../modules/project/services/project.service';
-import { HTTP_CLIENT, HttpClient } from '../../infra/http/http';
+  import { ref, reactive, onMounted, inject } from 'vue';
+  import { Project } from '../../modules/project/entities/project';
+  import { ProjectService } from '../../modules/project/services/project.service';
+  import { HTTP_CLIENT, HttpClient } from '../../infra/http/http';
 
-
-interface Props {
-  value: boolean;
-}
-const { value } = defineProps<Props>();
-
-const form = ref<any>(null);
-
-const emit = defineEmits(['input']);
-
-const project = ref('');
-
-const quantityDevs = ref(3);
-
-const projects: Project[] = reactive([]);
-
-const rules = {
-  required: (v: any) => !!v || 'Campo obrigatório',
-};
-
-async function getProjects() {
-  const projectService = new ProjectService(inject(HTTP_CLIENT) as HttpClient);
-
-  const listProjects = await projectService.getAllProjects();
-  projects.push(...listProjects);
-}
-
-async function goToForm() {
-  const { valid } = await form.value.validate();
-  if (valid) {
-    emit('input', project.value);
+  interface Props {
+    value: boolean;
   }
-}
+  const { value } = defineProps<Props>();
 
-onMounted(() => {
-  getProjects();
-});
+  const form = ref<any>(null);
+
+  const emit = defineEmits(['input']);
+
+  const project = ref('');
+
+  const projects: Project[] = reactive([]);
+
+  const rules = {
+    required: (v: any) => !!v || 'Campo obrigatório',
+  };
+
+  async function getProjects() {
+    const projectService = new ProjectService(
+      inject(HTTP_CLIENT) as HttpClient,
+    );
+
+    const listProjects = await projectService.getAllProjects();
+    projects.push(...listProjects);
+  }
+
+  async function goToForm() {
+    const { valid } = await form.value.validate();
+    if (valid) {
+      emit('input', project.value);
+    }
+  }
+
+  onMounted(() => {
+    getProjects();
+  });
 </script>
