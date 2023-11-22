@@ -33,4 +33,8 @@ export class ProjectService implements IProjectService {
     const payload = project.format();
     return this.httpClient.put(`/project/${project.id}`, payload);
   }
+
+  delete(id: string): Promise<void> {
+    return this.httpClient.delete(`/project/${id}`, null);
+  }
 }

@@ -13,6 +13,10 @@ export class LeadService {
     return this.httpClient.put(`/lead/${lead.id}`, payload);
   }
 
+  delete(id: string) {
+    return this.httpClient.delete(`/lead/${id}`, null);
+  }
+
   getAllLeads(): Promise<LeadEngineer[]> {
     return this.httpClient.get('/lead').then(({ data }) => {
       return data.map((lead: any) => new LeadEngineer(lead));

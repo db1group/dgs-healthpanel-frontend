@@ -104,9 +104,10 @@
           })
           .catch((e) => {
             this.$snackbar.open({
-              text: e.response.status === 409 ?
-                    'Nome ou email do lead ja cadastrado' : 
-                    'Erro ao cadastrar lead',
+              text:
+                e.response.status === 409
+                  ? 'Nome ou email do lead já cadastrado'
+                  : 'Erro ao cadastrar lead',
               color: 'danger',
               buttonColor: 'white',
             });
@@ -126,9 +127,10 @@
           })
           .catch((e) => {
             this.$snackbar.open({
-              text: e.response.status === 409 ?
-                    'Nome ou email do lead ja cadastrado' : 
-                    'Erro ao editar lead',
+              text:
+                e.response.status === 409
+                  ? 'Nome ou email do lead já cadastrado'
+                  : 'Erro ao editar lead',
               color: 'danger',
               buttonColor: 'white',
             });

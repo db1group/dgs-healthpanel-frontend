@@ -27,6 +27,14 @@
           <v-btn @click="editItem(item)" icon>
             <v-icon size="small"> mdi-pencil </v-icon>
           </v-btn>
+          <v-btn
+            @click="openDialog(item)"
+            v-model="dialogConfirmation.show"
+            icon
+          >
+            <v-icon size="small">mdi-delete</v-icon>
+            <dialog-confirmation-component @remove="removeItem()" />
+          </v-btn>
         </template>
       </v-data-table>
     </v-card-text>
@@ -38,6 +46,7 @@
   import { Project } from '../../entities/project';
   import { ProjectService } from '../../services/project.service';
   import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
+  import DialogConfirmationComponent from '../../../../components/dialog-confirmation/dialog-confirmation.component.vue';
 
   export default {
     data() {
@@ -54,27 +63,46 @@
           {
             title: 'Leads',
             align: 'start',
-            value: 'leadsNames'
+            value: 'leadsNames',
           },
           {
             title: 'Ações',
             align: 'start',
             value: 'actions',
-            width: '10%'
+            width: '10%',
           },
         ] as any,
         projects: [] as Project[],
-        search: ''
+        search: '',
+        dialogConfirmation: this.$dialogConfirmation,
+        idItemToRemove: '',
       };
     },
     methods: {
+      openDialog(item: Project) {
+        this.dialogConfirmation.open({
+          text: `Tem certeza que deseja remover o projeto ${item.name}?`,
+        });
+        this.idItemToRemove = item.id;
+      },
       editItem(item: Project) {
         this.$router.push({ name: 'project-edit', params: { id: item.id } });
+      },
+      async removeItem() {
+        await this.projectService.delete(this.idItemToRemove).then(() => {
+          this.$snackbar.open({
+            text: 'Projeto deletado com sucesso',
+            color: 'success',
+            buttonColor: 'white',
+          });
+          this.dialogConfirmation.close();
+          this.search = '';
+          this.getAllProjects();
+        });
       },
       goToForm() {
         this.$router.push({ name: 'project-create' });
       },
-
       async getAllProjects() {
         this.projects = await this.projectService.getAllProjects();
       },
@@ -83,5 +111,6 @@
       this.$loader.open();
       this.getAllProjects().finally(() => this.$loader.close());
     },
+    components: { DialogConfirmationComponent },
   };
 </script>

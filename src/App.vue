@@ -2,6 +2,7 @@
   <v-app>
     <loader-component />
     <snackbar-component />
+    <dialog-confirmation-component />
     <sidebar-component
       v-if="isAuthenticated"
       :drawer="drawer"
@@ -37,13 +38,13 @@
   import SidebarComponent from './components/sidebar/sidebar.component.vue';
   import LoaderComponent from './components/loader/loader.component.vue';
   import SnackbarComponent from './components/snackbar/snackbar.component.vue';
+  import DialogConfirmationComponent from './components/dialog-confirmation/dialog-confirmation.component.vue';
 
   const authService: AuthAd = inject(AUTH_AD) as AuthAd;
 
   let drawer = ref(false);
 
   let isAuthenticated = ref(false);
-
 
   function toggleSidebar() {
     drawer.value = !drawer.value;
@@ -52,5 +53,4 @@
   onMounted(async () => {
     isAuthenticated.value = await authService.connect();
   });
-
 </script>

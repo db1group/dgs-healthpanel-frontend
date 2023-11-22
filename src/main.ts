@@ -16,6 +16,7 @@ import { GlobalServices } from './infra/global-services/global-services';
 import { LoaderInterface } from './components/loader/services/loader.interface';
 import { ISnackbar } from './components/snackbar/interfaces/snackbar.interface';
 import { ChartRegister } from './infra/chart/chart.register';
+import { IDialogConfirmation } from './components/dialog-confirmation/interfaces/dialog-confirmation.interface';
 
 const pinia = createPinia();
 const vuetify = createVuetify({
@@ -51,5 +52,6 @@ declare module 'vue' {
   interface ComponentCustomProperties {
     $loader: LoaderInterface;
     $snackbar: ISnackbar;
+    $dialogConfirmation: IDialogConfirmation;
   }
 }
