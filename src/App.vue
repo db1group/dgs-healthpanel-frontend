@@ -23,7 +23,10 @@
         <v-toolbar-title> {{ $t('appName') }} </v-toolbar-title>
       </v-toolbar>
 
-      <section v-if="isAuthenticated">
+      <section
+        v-if="isAuthenticated"
+        :style="resizeStyle"
+      >
         <router-view />
       </section>
     </div>
@@ -31,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-  import { inject, onMounted, ref } from 'vue';
+  import { inject, onMounted, ref, computed } from 'vue';
   import { AuthAd, AUTH_AD } from './infra/auth/auth-ad';
   import SidebarComponent from './components/sidebar/sidebar.component.vue';
   import LoaderComponent from './components/loader/loader.component.vue';
@@ -46,7 +49,14 @@
   function toggleSidebar() {
     drawer.value = !drawer.value;
   }
-
+  
+  const resizeStyle = computed(() => {
+    return {
+      marginLeft: drawer.value ? '300px' : '0',
+      transition: '0.2s',
+    };
+  });
+  
   onMounted(async () => {
     isAuthenticated.value = await authService.connect();
   });
