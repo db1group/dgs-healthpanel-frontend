@@ -1,4 +1,10 @@
 <template>
+  <confirmation-dialog
+    :show="showDeleteDialog"
+    :text="projectConfirmationDeleteText"
+    @close="closeDialog"
+    @remove="removeItem"
+  />
   <v-card>
     <v-card-title>
       <v-row class="py-5" align="center" justify="space-between" no-gutters>
@@ -27,13 +33,8 @@
           <v-btn @click="editItem(item)" icon>
             <v-icon size="small"> mdi-pencil </v-icon>
           </v-btn>
-          <v-btn
-            @click="openDialog(item)"
-            v-model="dialogConfirmation.show"
-            icon
-          >
+          <v-btn @click="openDialog(item)" icon>
             <v-icon size="small">mdi-delete</v-icon>
-            <dialog-confirmation-component @remove="removeItem()" />
           </v-btn>
         </template>
       </v-data-table>
@@ -46,9 +47,12 @@
   import { Project } from '../../entities/project';
   import { ProjectService } from '../../services/project.service';
   import { HTTP_CLIENT, HttpClient } from '../../../../infra/http/http';
-  import DialogConfirmationComponent from '../../../../components/dialog-confirmation/dialog-confirmation.component.vue';
+  import ConfirmationDialog from '../../../../components/confirmation-dialog/confirmation.dialog.vue';
 
   export default {
+    components: {
+      ConfirmationDialog,
+    },
     data() {
       return {
         itemsPerPage: 15,
@@ -74,31 +78,32 @@
         ] as any,
         projects: [] as Project[],
         search: '',
-        dialogConfirmation: this.$dialogConfirmation,
-        idItemToRemove: '',
+        projectToRemove: new Project(),
+        showDeleteDialog: false,
       };
     },
     methods: {
       openDialog(item: Project) {
-        this.dialogConfirmation.open({
-          text: `Tem certeza que deseja remover o projeto ${item.name}?`,
-        });
-        this.idItemToRemove = item.id;
+        this.showDeleteDialog = true;
+        this.projectToRemove = item;
       },
       editItem(item: Project) {
         this.$router.push({ name: 'project-edit', params: { id: item.id } });
       },
       async removeItem() {
-        await this.projectService.delete(this.idItemToRemove).then(() => {
+        await this.projectService.delete(this.projectToRemove.id).then(() => {
           this.$snackbar.open({
             text: 'Projeto deletado com sucesso',
             color: 'success',
             buttonColor: 'white',
           });
-          this.dialogConfirmation.close();
+          this.showDeleteDialog = false;
           this.search = '';
           this.getAllProjects();
         });
+      },
+      closeDialog() {
+        this.showDeleteDialog = false;
       },
       goToForm() {
         this.$router.push({ name: 'project-create' });
@@ -107,10 +112,14 @@
         this.projects = await this.projectService.getAllProjects();
       },
     },
+    computed: {
+      projectConfirmationDeleteText() {
+        return `Tem certeza que deseja excluir o projeto ${this.projectToRemove.name}`;
+      },
+    },
     created() {
       this.$loader.open();
       this.getAllProjects().finally(() => this.$loader.close());
     },
-    components: { DialogConfirmationComponent },
   };
 </script>
