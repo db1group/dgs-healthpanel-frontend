@@ -34,7 +34,6 @@
         @click="goToPage('ranking')"
       ></v-list-item>
       <v-list-item
-        v-if="isManager"
         title="Painel de saúde"
         prepend-icon="mdi-chart-line"
         value="health-panel-bi"
