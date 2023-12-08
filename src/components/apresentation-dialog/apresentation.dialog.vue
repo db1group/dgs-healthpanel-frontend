@@ -29,6 +29,7 @@
                     :rules="[rules.required]"
                     v-model:model-value="project"
                     :items="projects"
+                    return-object
                     item-title="name"
                     item-value="id"
                   />
@@ -52,46 +53,46 @@
   </v-dialog>
 </template>
 
-<script setup lang="ts">
-  import { ref, reactive, onMounted, inject } from 'vue';
+<script lang="ts">
+  import { defineComponent, inject } from 'vue';
   import { Project } from '../../modules/project/entities/project';
   import { ProjectService } from '../../modules/project/services/project.service';
   import { HTTP_CLIENT, HttpClient } from '../../infra/http/http';
 
-  interface Props {
-    value: boolean;
-  }
-  const { value } = defineProps<Props>();
+  export default defineComponent({
+    props: {
+      value: {
+        type: Boolean,
+        required: true,
+      },
+    },
+    data() {
+      return {
+        project: new Project(),
+        projects: [] as Project[],
+        rules: {
+          required: (v: any) => !!v || 'Campo obrigatório',
+        },
+      };
+    },
+    methods: {
+      async getProjects() {
+        const projectService = new ProjectService(
+          inject(HTTP_CLIENT) as HttpClient,
+        );
 
-  const form = ref<any>(null);
-
-  const emit = defineEmits(['input']);
-
-  const project = ref('');
-
-  const projects: Project[] = reactive([]);
-
-  const rules = {
-    required: (v: any) => !!v || 'Campo obrigatório',
-  };
-
-  async function getProjects() {
-    const projectService = new ProjectService(
-      inject(HTTP_CLIENT) as HttpClient,
-    );
-
-    const listProjects = await projectService.getAllProjects();
-    projects.push(...listProjects);
-  }
-
-  async function goToForm() {
-    const { valid } = await form.value.validate();
-    if (valid) {
-      emit('input', project.value);
-    }
-  }
-
-  onMounted(() => {
-    getProjects();
+        const listProjects = await projectService.getAllProjects();
+        this.projects.push(...listProjects);
+      },
+      async goToForm() {
+        const { valid } = await (this.$refs.form as any).validate();
+        if (valid) {
+          this.$emit('input', this.project);
+        }
+      },
+    },
+    mounted() {
+      this.getProjects();
+    },
   });
 </script>
