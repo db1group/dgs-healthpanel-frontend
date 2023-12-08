@@ -69,6 +69,14 @@
               auto-grow
             ></v-textarea>
           </v-col>
+          <v-col cols="12" lg="4">
+            <v-switch
+              variant="outlined"
+              v-model="project.usesCli"
+              label="Utiliza o DB1 CLI para coleta de métricas"
+              color="primary"
+            ></v-switch>
+          </v-col>
         </v-row>
       </v-form>
     </v-card-text>
