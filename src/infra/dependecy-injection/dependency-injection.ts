@@ -1,6 +1,6 @@
 import { App } from 'vue';
-import { authStore } from '../../store/auth-store';
-import { AuthStore } from '../../store/auth-store.interface';
+import { authStore } from '../../store/modules/auth/auth-store';
+import { AuthStore } from '../../store/modules/auth/auth-store.interface';
 import { AuthAd, AUTH_AD } from '../auth/auth-ad';
 import { MicrosoftAdService } from '../auth/microsoft-ad.service';
 import { AxiosAdapter } from '../http/axios-adapter';

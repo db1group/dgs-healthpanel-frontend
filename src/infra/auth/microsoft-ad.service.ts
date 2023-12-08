@@ -1,5 +1,5 @@
 import * as Msal from '@azure/msal-browser';
-import { AuthStore } from '../../store/auth-store.interface';
+import { AuthStore } from '../../store/modules/auth/auth-store.interface';
 
 import { AuthAd } from './auth-ad';
 

@@ -1,3 +1,5 @@
 {
-  "appName": "Health Panel 2.0"
+  "app": {
+    "appName": "Health panel 2.0"
+  }
 }

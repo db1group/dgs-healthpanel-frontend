@@ -28,7 +28,7 @@ function setupI18nLanguageByBrowser() {
     ) {
       i18n.global.locale = lang as SupportedLanguages;
       document.querySelector('html')!.lang = lang;
-      document.title = 'DGS - ' + i18n.global.t('appName');
+      document.title = 'DGS - ' + i18n.global.t('app.appName');
       return;
     }
   }

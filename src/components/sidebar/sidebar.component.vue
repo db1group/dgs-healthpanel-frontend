@@ -81,8 +81,8 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { authStore } from '../../store/auth-store';
   import { onMounted } from 'vue';
+  import { authStore } from '../../store/modules/auth/auth-store';
 
   const emit = defineEmits(['input']);
   const store = authStore();
@@ -130,3 +130,4 @@
     emit('input', false);
   }
 </script>
+../../store/modules/auth/auth-store

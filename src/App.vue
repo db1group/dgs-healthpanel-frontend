@@ -20,13 +20,12 @@
           @click.stop="toggleSidebar"
         ></v-app-bar-nav-icon>
 
-        <v-toolbar-title> {{ $t('appName') }} </v-toolbar-title>
+        <v-toolbar-title> {{ $t('app.appName') }} </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn>{{ $t('app.buttonGenerateKey') }}</v-btn>
       </v-toolbar>
 
-      <section
-        v-if="isAuthenticated"
-        :style="resizeStyle"
-      >
+      <section v-if="isAuthenticated">
         <router-view />
       </section>
     </div>

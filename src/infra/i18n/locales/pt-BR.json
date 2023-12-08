@@ -1,3 +1,6 @@
 {
-  "appName": "Painel de saúde 2.0"
+  "app": {
+    "appName": "Painel de saúde 2.0",
+    "buttonGenerateKey": "Gerar chave para o CLI"
+  }
 }

@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { AuthStore } from '../../store/auth-store.interface';
+import { AuthStore } from '../../store/modules/auth/auth-store.interface';
 import { HttpClient } from './http';
 import { AuthAd } from '../auth/auth-ad';
 import { ISnackbar } from '../../components/snackbar/interfaces/snackbar.interface';
