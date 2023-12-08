@@ -12,7 +12,7 @@ export class Project {
 
   public sonarToken: string;
 
-  public usesCli: boolean;
+  public hasCLIActivated: boolean;
 
   public sonarKeys: string;
 
@@ -23,7 +23,7 @@ export class Project {
   constructor(data: any = {}) {
     this.id = data.id;
     this.name = data.name;
-    this.usesCli = data.usesCli === true;
+    this.hasCLIActivated = data.hasCLIActivated === true;
     this.sonarName = data.sonarName;
     this.sonarUrl = data.sonarUrl;
     this.sonarToken = data.sonarToken;
@@ -57,7 +57,7 @@ export class Project {
       sonarName: this.sonarName,
       sonarToken: this.sonarToken,
       sonarUrl: this.sonarUrl,
-      usesCli: this.usesCli === true,
+      hasCLIActivated: this.hasCLIActivated === true,
       sonarProjectKeys: this.sonarKeys,
       costCenter: { id: this.costCenter.id },
       leadProjects: this.leads.length

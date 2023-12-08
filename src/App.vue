@@ -22,7 +22,7 @@
 
         <v-toolbar-title> {{ $t('app.appName') }} </v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn>{{ $t('app.buttonGenerateKey') }}</v-btn>
+        <v-btn v-if="hasCLIActivated">{{ $t('app.buttonGenerateKey') }}</v-btn>
       </v-toolbar>
 
       <section v-if="isAuthenticated">
@@ -33,13 +33,14 @@
 </template>
 
 <script lang="ts">
-  import { inject } from 'vue';
+  import { inject, defineComponent } from 'vue';
   import { AuthAd, AUTH_AD } from './infra/auth/auth-ad';
   import SidebarComponent from './components/sidebar/sidebar.component.vue';
   import LoaderComponent from './components/loader/loader.component.vue';
   import SnackbarComponent from './components/snackbar/snackbar.component.vue';
+  import { applicationGlobalStore } from './store/modules/global/global.store';
 
-  export default {
+  export default defineComponent({
     components: {
       SidebarComponent,
       LoaderComponent,
@@ -57,8 +58,22 @@
         this.drawer = !this.drawer;
       },
     },
-    async mounted() {
-      this.isAuthenticated = await this.authService.connect();
+    setup() {
+      const globaStore = applicationGlobalStore();
+
+      return {
+        globaStore,
+      };
     },
-  };
+    computed: {
+      hasCLIActivated() {
+        return this.globaStore.project?.hasCLIActivated ?? false;
+      },
+    },
+    mounted() {
+      this.authService.connect().then(() => {
+        this.isAuthenticated = true;
+      });
+    },
+  });
 </script>
