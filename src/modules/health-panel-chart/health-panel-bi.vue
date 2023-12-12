@@ -155,7 +155,10 @@
             this.dateService.isAfter(new Date(a), new Date(b)) ? 1 : -1,
           )
           .map((it: string) =>
-            this.dateService.format(new Date(it), 'MMM - yyyy'),
+            this.dateService.format(
+              new Date(new Date(it).setUTCHours(3)),
+              'MMM - yyyy',
+            ),
           );
       },
 
