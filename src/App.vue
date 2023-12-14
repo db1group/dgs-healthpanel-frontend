@@ -23,10 +23,7 @@
         <v-toolbar-title> {{ $t('appName') }} </v-toolbar-title>
       </v-toolbar>
 
-      <section
-        v-if="isAuthenticated"
-        :style="resizeStyle"
-      >
+      <section v-if="isAuthenticated" :style="resizeStyle">
         <router-view />
       </section>
     </div>
@@ -60,6 +57,14 @@
     },
     async mounted() {
       this.isAuthenticated = await this.authService.connect();
+    },
+    computed: {
+      resizeStyle() {
+        return {
+          marginLeft: this.drawer ? '300px' : '0',
+          transition: '0.2s',
+        };
+      },
     },
   };
 </script>
