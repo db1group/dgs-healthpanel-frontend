@@ -70,9 +70,10 @@
             ></v-textarea>
           </v-col>
           <v-col cols="12" lg="4">
+            {{ project.useDB1CLI }}
             <v-switch
               variant="outlined"
-              v-model="project.usesCli"
+              v-model="project.useDB1CLI"
               label="Utiliza o DB1 CLI para coleta de métricas"
               color="primary"
             ></v-switch>

@@ -7,6 +7,10 @@
       :drawer="drawer"
       @input="drawer = !drawer"
     />
+    <generate-cli-key-dialog
+      v-if="showGenerateKeyDialog"
+      v-model="showGenerateKeyDialog"
+    />
 
     <div v-if="isAuthenticated">
       <v-toolbar
@@ -20,9 +24,20 @@
           @click.stop="toggleSidebar"
         ></v-app-bar-nav-icon>
 
-        <v-toolbar-title> {{ $t('app.appName') }} </v-toolbar-title>
+        <v-toolbar-title>
+          {{ $t('app.appName') }}
+          <v-chip v-if="projectName"
+            >{{ $t('app.projectSelectedMessage') }}
+            <span class="ml-2 font-weight-bold">
+              {{ projectName }}
+            </span></v-chip
+          >
+        </v-toolbar-title>
+
         <v-spacer></v-spacer>
-        <v-btn v-if="hasCLIActivated">{{ $t('app.buttonGenerateKey') }}</v-btn>
+        <v-btn @click="openGenerateKeyDialog" v-if="hasCLIActivated">{{
+          $t('app.buttonGenerateKey')
+        }}</v-btn>
       </v-toolbar>
 
       <section v-if="isAuthenticated">
@@ -39,23 +54,29 @@
   import LoaderComponent from './components/loader/loader.component.vue';
   import SnackbarComponent from './components/snackbar/snackbar.component.vue';
   import { applicationGlobalStore } from './store/modules/global/global.store';
+  import GenerateCliKeyDialog from './components/gererate-cli-key-dialog/gererate-cli-key.dialog.vue';
 
   export default defineComponent({
     components: {
       SidebarComponent,
       LoaderComponent,
       SnackbarComponent,
+      GenerateCliKeyDialog,
     },
     data() {
       return {
         authService: inject(AUTH_AD) as AuthAd,
         drawer: false,
         isAuthenticated: false,
+        showGenerateKeyDialog: false,
       };
     },
     methods: {
       toggleSidebar() {
         this.drawer = !this.drawer;
+      },
+      openGenerateKeyDialog() {
+        this.showGenerateKeyDialog = true;
       },
     },
     setup() {
@@ -67,7 +88,10 @@
     },
     computed: {
       hasCLIActivated() {
-        return this.globaStore.project?.hasCLIActivated ?? false;
+        return this.globaStore.project?.useDB1CLI ?? false;
+      },
+      projectName() {
+        return this.globaStore.project?.name ?? '';
       },
     },
     mounted() {

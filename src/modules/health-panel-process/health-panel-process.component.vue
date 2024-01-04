@@ -1,6 +1,9 @@
 <template>
   <div class="health-panel-process">
-    <apresentation-dialog @input="setProject" :value="showDialog" />
+    <apresentation-dialog
+      @set-project="setProject"
+      :value="showPresentationDialog"
+    />
 
     <v-tabs v-model="tab" fixed-tabs color="primary">
       <v-tab color="primary" v-for="(item, index) in getTabs" :value="index">
@@ -72,11 +75,21 @@
   import { SaveFormService } from './services/save-form.service';
   import ApresentationDialog from '../../components/apresentation-dialog/apresentation.dialog.vue';
   import { HealthPanelProcess } from './domain/health-panel-process';
+  import { Project } from '../project/entities/project';
+  import { applicationGlobalStore } from '../../store/modules/global/global.store';
+  import GenerateCLIKeyDialog from '../../components/gererate-cli-key-dialog/gererate-cli-key.dialog.vue';
 
   export default {
     components: {
       HealthPanelColumnsComponent,
       ApresentationDialog,
+      GenerateCLIKeyDialog,
+    },
+    setup() {
+      const globalStore = applicationGlobalStore();
+      return {
+        globalStore,
+      };
     },
     data() {
       return {
@@ -85,8 +98,8 @@
         getQuestionService: new GetQuestionsService(
           inject(HTTP_CLIENT) as HttpClient,
         ),
-        project: '',
-        showDialog: false,
+        project: new Project(),
+        showPresentationDialog: false,
         healthPanelProcess: new HealthPanel(),
       };
     },
@@ -105,21 +118,26 @@
       },
     },
     methods: {
-      async setProject(projectData: string) {
+      async setProject(projectData: Project) {
         this.$loader.open();
-        this.showDialog = false;
+        this.showPresentationDialog = false;
         this.project = projectData;
+        this.globalStore.setProject(projectData);
 
         await this.getQuestions();
         this.$loader.close();
       },
       getQuestions() {
         return this.getQuestionService
-          .execute(this.project)
+          .execute(this.project.id)
           .then((response) => {
-            this.healthPanelProcess = new HealthPanel(response, this.project);
+            this.healthPanelProcess = new HealthPanel(
+              response,
+              this.project.id,
+            );
           });
       },
+
       sendForm() {
         this.$loader.open();
         this.saveFormService
@@ -130,8 +148,6 @@
               buttonColor: 'white',
               color: 'success',
             });
-            
-
           })
           .catch(() => {
             this.$snackbar.open({
@@ -146,7 +162,7 @@
       },
     },
     created() {
-      this.showDialog = true;
+      this.showPresentationDialog = true;
     },
   };
 </script>

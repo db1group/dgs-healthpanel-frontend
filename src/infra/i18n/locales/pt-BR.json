@@ -1,6 +1,14 @@
 {
   "app": {
     "appName": "Painel de saúde 2.0",
-    "buttonGenerateKey": "Gerar chave para o CLI"
+    "buttonGenerateKey": "Gerar chave para o CLI",
+    "projectSelectedMessage": "Respondendo pelo projeto: "
+  },
+  "generateCliDialog": {
+    "title": "Chave temporária para o CLI",
+    "message": "Esta chave é temporária e será válida por 1 hora ou 1 utilização. Após este período, será necessário gerar uma nova chave.",
+    "buttonGenerate": "Gerar chave",
+    "buttonClose": "Fechar",
+    "buttonCopy": "Copiar chave"
   }
 }

@@ -20,7 +20,7 @@
             </p>
           </v-col>
           <v-col cols="12">
-            <v-form ref="form">
+            <v-form @submit="(e) => e.preventDefault()" ref="form">
               <v-row>
                 <v-col cols="12" lg="12">
                   <v-autocomplete
@@ -68,7 +68,7 @@
     },
     data() {
       return {
-        project: new Project(),
+        project: null as any,
         projects: [] as Project[],
         rules: {
           required: (v: any) => !!v || 'Campo obrigatório',
@@ -87,7 +87,7 @@
       async goToForm() {
         const { valid } = await (this.$refs.form as any).validate();
         if (valid) {
-          this.$emit('input', this.project);
+          this.$emit('set-project', this.project);
         }
       },
     },

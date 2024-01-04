@@ -1,5 +1,11 @@
 {
   "app": {
-    "appName": "Health panel 2.0"
+    "appName": "Health panel 2.0",
+    "buttonGenerateKey": "Generate key for CLI",
+    "projectSelectedMessage": "Answering for project: "
+  },
+  "generateCliDialog": {
+    "title": "Generate key for CLI",
+    "message": "This key is temporary and will be valid for 1 hour or 1 use. After this period, it will be necessary to generate a new key."
   }
 }
