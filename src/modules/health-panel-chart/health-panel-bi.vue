@@ -117,7 +117,7 @@
       ),
       chartDataSet: { labels: [] } as any,
       dates: [] as string[],
-      years: ['2022', '2023'],
+      years: ['2022', '2023', '2024'],
       costCenters: [] as { id: string; name: string }[],
       dateService: inject(DATE_SERVICE) as DateService,
       tabs: [
