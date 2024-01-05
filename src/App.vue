@@ -23,10 +23,7 @@
         <v-toolbar-title> {{ $t('appName') }} </v-toolbar-title>
       </v-toolbar>
 
-      <section
-        v-if="isAuthenticated"
-        :style="resizeStyle"
-      >
+      <section v-if="isAuthenticated">
         <router-view />
       </section>
     </div>
